@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import AnalyticModels as am
 
 
-volFrac = np.linspace(0.05, 0.4, 250)
+volFrac = np.linspace(0.05, 0.7, 250)
 ki = 1
 km = 0.1
 
@@ -13,7 +13,7 @@ raylYY = am.rayleighYY(ki, km, volFrac)
 rcLN = am.randomcloseLewisNielsen(ki, km, volFrac)
 rlLN = am.randomlooseLewisNielsen(ki, km, volFrac)
 
-model_results = [mxw, rayl, raylYY, rcLN, rlLN][0:3]
+model_results = [mxw, rayl, raylYY, rcLN, rlLN][0:5]
 colors = ['r-', 'g-', 'b-', 'y-', 'k-']
 labels = ['Maxwell', 'Rayleigh', 'RayleighYY', 'randC LewisN', 'randL LewisN']
 
