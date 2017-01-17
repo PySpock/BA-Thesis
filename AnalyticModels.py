@@ -84,6 +84,17 @@ def randomlooseLewisNielsen(kInlay, kMatrix, inlayVolFrac):
 	kEff = (1 + shapePar * b * inlayVolFrac) / (1 - b * psi * inlayVolFrac)
 	return kEff
 
+# Higher order analytical model from "Argentinian" paper
+
+def ChiewGland(kInlay, kMatrix, inlayVolFrac):
+	fracIM = kInlay / kMatrix
+	beta = (fracIM - 1) / (fracIM + 2)
+	num = (1 + 2 * beta * inlayVolFrac + (2 * beta ** 3 - 0.1 * beta) * np.power(inlayVolFrac, 2) 
+		   + np.power(inlayVolFrac, 3) * 0.05 * m.exp(4.5 * beta))
+	denom = 1 - beta * inlayVolFrac
+	kEff = kMatrix * num / denom
+	return kEff
+
 
 # Effective phase contrast: Important parameter which tells us the applicability of the
 # Maxwell-based models like Maxwell or HasselmanJohnson
@@ -92,5 +103,6 @@ def effPhaseContrast(kInlay, kMatrix, kEff, rP, rInt):
 	gamma = kEff / ((1 + kInlay * rInt / a) * kMatrix)
 	return gamma
 
-print(maxwell(10,0.01,0.2))
-print(rayleigh(10, 0.01,0.2))
+print(maxwell(1,0.01,0.2))
+print(rayleigh(1, 0.01,0.2))
+print(ChiewGland(1,0.01,0.2))
