@@ -60,6 +60,8 @@ def limitingcaseBruggemann(kInlay, kMatrix, inlayVolFrac, rP, rInt):
 	kEff = kMatrix * 1 / (np.power(1 - inlayVolFrac, 3 * (1 - alpha) / (1 + 2 * alpha)))
 	return kEff
 
+# Lewis-Nielsen models WIP, on test they yet diverge :(
+
 def simplecubicLewisNielsen(kInlay, kMatrix, inlayVolFrac):
 	shapePar = 1.5 # Shape Parameter of inlay (here spherical) as required by model
 	phiM = 0.524 # Simple cubic maximum packaging fraction 
