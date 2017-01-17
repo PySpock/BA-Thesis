@@ -1,0 +1,8 @@
+{ASCII Header: Morituri te salutant} 
+-------------
+DataPoint 0: 2.9108661292974247
+DataPoint 1: 2.417440922160283
+DataPoint 2: 1.0543335530200024
+DataPoint 3: 2.6961242688143163
+DataPoint 4: 2.7240386782934585
+DataPoint 5: 0.3428118814133774
