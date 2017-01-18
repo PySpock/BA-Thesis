@@ -64,7 +64,21 @@ print(' ')
 print('Creation Date 2017-01-06')
 print('Current date: ', dt.date.today())
 print(' ')
-print('Listing txt-content of current working directory ', os.getcwd(), ' ...')
+print(' ')
+
+while True:
+	try:
+		print('Please input the directory in quotes and double slashes, where the flexPDE summaries are saved.')
+		path = input('Input path: ')
+		if os.path.isdir(path):
+			print('Success, directory exists')
+			os.chdir(path)
+			break
+	except:
+		pass
+	print('Error: No directory found')
+
+print('Listing txt-content of set working directory ', os.getcwd(), ' ...')
 print(' ')
 
 exTXT = False
