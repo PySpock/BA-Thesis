@@ -64,6 +64,7 @@ for i in range(number):
 	file.write('-------------\n')
 	for it in range(6):
 		file.write('DataPoint ' + str(it) + ': ' + str(rand.uniform(0, 3)) + '\n')
+	file.close()
 
 data_files = getFiles('Data')
 

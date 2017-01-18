@@ -1,8 +1,6 @@
 import os
 import datetime as dt
-import numpy as np
-import matplotlib.pyplot as plt
-import AnalyticModels as am
+
 
 def escCharCleanup(strList):
 	# Returns eine String-List ohne /n-Escape-Char, wenn der an letzer Stelle eines Elements steht
@@ -43,25 +41,44 @@ def getFiles(startString):
 	txt_file_list.sort(key = getint)
 	return txt_file_list
 
+def writeFile(name, keys, vals):
+	file = open(name + '.txt', 'w')
+	for key in keys:
+		file.write(key + '\n')
+
+	delimiter = '-----'
+	file.write(delimiter + '\n')
+	width = len(vals[0])
+	height = len(vals)
+
+	for valkey in range(width):
+		for valrun in range(height):
+			file.write(str(vals[valrun][valkey]) + ',')
+		file.write('\n')
+	file.close()
+
+
 print("Stebix Python Script Version 0.1")
 print(' ')
 print(' ')
 print('Creation Date 2017-01-06')
 print('Current date: ', dt.date.today())
 print(' ')
-print('Listing content of current working directory ', os.getcwd(), ' ...')
+print('Listing txt-content of current working directory ', os.getcwd(), ' ...')
 print(' ')
 
+exTXT = False
 for entry in os.listdir(os.getcwd()):
-	print(entry)
+	if entry[-4:] == '.txt':
+		print(entry)
+		exTXT = True
+if exTXT == False:
+	print('No existing TXT-Files in this directory!') 
 
 
 data_files = getFiles('Sim_Info')
-
 mf_keys = []
 mf_vals = []
-
-
 for filename in data_files:
 	file = open(filename, 'r')
 	# Inhalt des Files wird als Liste eingelesen, Element von content entspricht einer Zeile
@@ -72,18 +89,12 @@ for filename in data_files:
 	mf_vals.append(vals)
 
 print(mf_vals)
-print(mf_keys)
 
-x = np.linspace(0.01, 0.2, 20)
-y = [item[0] for item in mf_vals]
-
-
-
-plt.plot(x, y, 'ro', label = 'Datenpunkt kEff(volFrac)')
-plt.legend()
-plt.show()
-
-
-
-
-
+print(' ')
+print(' ')
+print('Please input the name for the results file: ')
+name = input()
+print('Creating result file ' + str(name) + '.txt ...')
+writeFile(name, mf_keys, mf_vals)
+print('Done, press Enter to exit')
+dummy = input()
