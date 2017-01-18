@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def readFile(name):
 	file = open(name, 'r')
@@ -17,16 +18,12 @@ def separateKeysVals(line_list,delimiter):
 		val_lines_clean.append([float(value) for value in cache[:-1]])
 	return key_lines, val_lines_clean
 
-		
 
 resultfile = 'Results.txt'
 delimiter = '-----'
-#lines = readFile(resultfile)
-
-test = ['hans','wurst','-----','1,2,3,4,5,6,','7,8,9,10,11,12']
-
+lines = readFile(resultfile)
 keys, vals = separateKeysVals(test, delimiter)
 
-print(keys)
-print(vals)
+# Man kann jetzt mit den keys und values sauber weiterarbeiten und z.b. Plotten
 
+# Code
