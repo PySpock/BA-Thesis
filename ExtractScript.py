@@ -88,8 +88,6 @@ for filename in data_files:
 	mf_keys = keys
 	mf_vals.append(vals)
 
-print(mf_vals)
-
 print(' ')
 print(' ')
 print('Please input the name for the results file: ')
