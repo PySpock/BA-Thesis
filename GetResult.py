@@ -27,14 +27,14 @@ def separateKeysVals(line_list, delimiter):
 		val_lines_clean = []
 		for stritem in val_lines:
 			cache = stritem.split(',')
-			val_lines_clean.append([float(value) for value in cache[:-1]])
+			val_lines_clean.append([float(value) for value in cache])
 	return key_lines, val_lines_clean
 
 # Path data to TXT-file with simulation results
-# Specify path and name ("hardcoded variables")
+# Specify path and name as "hardcoded variables"
 
-filepath = 'C:\\Users\\Jannik\\Desktop\\NewData'
-resultfile = 'RandSphere.txt'
+filepath = 'C:\\Users\\stebanij\\Desktop\\N=9 Rand_Dispersed Spheres'
+resultfile = 'RnsSpheres.txt'
 delimiter = '-----'
 
 if os.path.isdir(filepath):
@@ -49,19 +49,21 @@ else:
 print(keys)
 print(vals)
 
-vF = np.linspace(0.01,0.25,200)
+vF = np.linspace(0.005,0.125,200)
 ki = 1.00
 km = 0.01
-
-v1corr = [0.25 * vFrac for vFrac in vals[1]]
 
 mx = am.maxwell(ki,km,vF)
 cg = am.ChiewGland(ki,km,vF)
 rl = am.rayleigh(ki,km,vF)
+rlYY = am.rayleighYY(ki,km,vF)
+mean_rl = 0.5 * (rl + rlYY)
 
-plt.plot(v1corr, vals[0], 'ro', label='kEff from FEM/numerical')
+plt.plot(vals[1], vals[0], 'ro', label='kEff from FEM/numerical')
 plt.plot(vF, mx, 'g-', label='Maxwell')
 plt.plot(vF, cg, 'b-', label='ChiewGland')
 plt.plot(vF, rl, 'y-', label='Rayleigh')
+plt.plot(vF, rlYY, 'm-', label='RayleighYY')
+plt.plot(vF, mean_rl, 'k-', label='Mean of Rayl. and Rayl.YY')
 plt.legend(loc=2)
 plt.show()

@@ -10,6 +10,7 @@ import numpy as np
 # kMatrix : thermal conductivity of the continous surrounding matrix material
 # inlayVolFrac : volume/area fraction of inlay and matrix
 
+
 def maxwell(kInlay, kMatrix, inlayVolFrac):
 	kEff = kMatrix * (1 + 3 * inlayVolFrac * 1 / ((kInlay + 2 * kMatrix)/(kInlay - kMatrix) - inlayVolFrac))
 	return kEff
@@ -31,6 +32,7 @@ def rayleighYY(kInlay, kMatrix, inlayVolFrac):
 	C2Factor = 0.30584 * np.power(inlayVolFrac, 4) + 0.013363 * np.power(inlayVolFrac, 8)
 	kEff = kMatrix * (1 + 2 * inlayVolFrac / (C1 - inlayVolFrac + C2 * C2Factor))
 	return kEff
+
 
 # rP : particle inlay radius
 # kBound : boundary thermal conductivity between matrix and particle inlay
@@ -57,6 +59,7 @@ def flatplateHasselmanJohnson(kInlay, kMatrix, inlayVolFrac, rP, kBound):
 	kEff = kInlay / ((1 - fracIM + 2 * fracIrB) * inlayVolFrac + fracIM)
 	return kEff
 
+
 # alpha : dimensionless parameter depending on ITR between inlay and matrix
 # alpha = kapitza radius / radius
 # ak : Kapitza radius
@@ -69,8 +72,7 @@ def limitingcaseBruggemann(kInlay, kMatrix, inlayVolFrac, rP, rInt):
 	return kEff
 
 
-
-# Lewis-Nielsen models WIP, on test they yet diverge :(
+# Lewis-Nielsen models WIP, they are all implemented for spherical particles
 
 def simplecubicLewisNielsen(kInlay, kMatrix, inlayVolFrac):
 	shapePar = 1.5 # Shape Parameter of inlay (here spherical) as required by model
@@ -95,8 +97,6 @@ def randomlooseLewisNielsen(kInlay, kMatrix, inlayVolFrac):
 	psi = 1 + ((1 - phiM) / np.power(phiM, 2)) * inlayVolFrac
 	kEff = kMatrix * (1 + shapePar * b * inlayVolFrac) / (1 - b * psi * inlayVolFrac)
 	return kEff
-
-
 
 
 # Higher order analytical model from "Argentinian" paper
