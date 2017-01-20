@@ -28,16 +28,14 @@ def separateKeysVals(line_list, delimiter):
 			val_lines_clean.append([float(value) for value in cache[:-1]])
 	return key_lines, val_lines_clean
 
-test = ['hans','wurst','-----','1,2,3,4,5,','6,7,8,9,10,']
+# Path data to TXT-file with simulation results
+# Specify path and name ("hardcoded variables")
 
+filepath = 'C:\\Users\\Jannik\\Desktop\\5 Sphere varVolFrac'
 resultfile = 'Results.txt'
 delimiter = '-----'
+
 lines = readFile(resultfile)
 keys, vals = separateKeysVals(lines, delimiter)
 
-print(keys)
-print(vals)
-
-# Man kann jetzt mit den keys und values sauber weiterarbeiten und z.b. Plotten
-
-# Code
+# Code, e.g. plotting
