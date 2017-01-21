@@ -90,10 +90,10 @@ while True:
 
 	exTXT = False
 	for entry in os.listdir(os.getcwd()):
-		if entry[-4:] == '.txt':
+		if entry.endswith('.txt'):
 			print(entry)
 			exTXT = True
-	if exTXT == False:
+	if not exTXT:
 		print('No existing TXT-Files in this directory!') 
 
 
