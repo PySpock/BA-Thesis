@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-import shared.AnalyticModels as am
+import AnalyticModels as am
 
 def readFile(name):
 	try:

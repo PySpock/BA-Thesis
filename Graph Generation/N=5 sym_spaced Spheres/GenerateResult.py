@@ -31,25 +31,20 @@ def separateKeysVals(line_list, delimiter):
 	return key_lines, val_lines_clean
 
 # Path data to TXT-file with simulation results
-# Specify path and name as "hardcoded variables"
+# Specify (path and) name as "hardcoded variables"
 
-filepath = 'C:\\Users\\stebanij\\Desktop\\N=9 Rand_Dispersed Spheres'
-resultfile = 'RnsSpheres.txt'
+resultfile = 'SymSpacSpheres.txt'
 delimiter = '-----'
 
-if os.path.isdir(filepath):
-	os.chdir(filepath)
-	lines = readFile(resultfile)
-	keys, vals = separateKeysVals(lines, delimiter)
-else:
-	print('Path does not exist: ' + filepath)
+lines = readFile(resultfile)
+keys, vals = separateKeysVals(lines, delimiter)
 
 # Code, e.g. plotting
 
 print(keys)
 print(vals)
 
-vF = np.linspace(0.005,0.125,200)
+vF = np.linspace(0.005,0.375,200)
 ki = 1.00
 km = 0.01
 
@@ -66,4 +61,5 @@ plt.plot(vF, rl, 'y-', label='Rayleigh')
 plt.plot(vF, rlYY, 'm-', label='RayleighYY')
 plt.plot(vF, mean_rl, 'k-', label='Mean of Rayl. and Rayl.YY')
 plt.legend(loc=2)
+plt.savefig('RandDisp.pdf')
 plt.show()
