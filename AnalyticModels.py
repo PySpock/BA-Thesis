@@ -118,6 +118,23 @@ def effPhaseContrast(kInlay, kMatrix, kEff, rP, rInt):
 	gamma = kEff / ((1 + kInlay * rInt / rP) * kMatrix)
 	return gamma
 
-print(maxwell(1,0.01,0.2))
-print(rayleigh(1, 0.01,0.2))
-print(ChiewGland(1,0.01,0.2))
+
+# Some meta-function-packages for easier plotting
+
+def funcPack_maxwellbased():
+	package = {'Maxwell' : maxwell, 'Maxwell-Eucken' : mxwEucken, 'Rayleigh' : rayleigh,
+				'RayleighYY' : rayleighYY, 'Chiew Gland' : ChiewGland}
+	return package
+
+def funcPack_hasseljohn():
+	package = {'Spherical Hasselman Johnson' : sphericalHasselmanJohnson,
+				'Cylindrical Hasselman Johnson' : cylindricalHasselmanJohnson,
+				'Flat-plate Hasselman Johnson' : flatplateHasselmanJohnson}
+	return package
+
+def funcPack_lewisniels():
+	package = {'Simple cubic lattice Lewis Nielsen' : simplecubicLewisNielsen,
+				'Random close spherical Lewis Nielsen' : randomcloseLewisNielsen,
+				'Random loose spherical Lewis Nielsen' : randomlooseLewisNielsen}
+	return package
+
