@@ -24,11 +24,13 @@ def separateKeysVals(line_list, delimiter):
 	else:
 		key_lines = line_list[:split_index]
 		val_lines = line_list[split_index + 1:]
-		val_lines_clean = []
-		for stritem in val_lines:
-			cache = stritem.split(',')
-			val_lines_clean.append([float(value) for value in cache])
-	return key_lines, val_lines_clean
+		vals_split = np.asarray([line.split(',') for line in val_lines], dtype=np.float64)
+		# Implementation with "classic" Python lists
+		#val_lines_clean = []
+		#for stritem in val_lines:
+		#	cache = stritem.split(',')
+		#	val_lines_clean.append([float(value) for value in cache])
+	return key_lines, vals_split
 
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
