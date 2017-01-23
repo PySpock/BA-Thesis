@@ -8,6 +8,11 @@
 *.svg
 *.html
 
+# Python compiled Bytecode #
+############################
+*.pyc
+__pycache__/
+
 # Compiled source #
 ###################
 *.com
@@ -16,6 +21,7 @@
 *.exe
 *.o
 *.so
+
 
 # Packages #
 ############
