@@ -18,14 +18,17 @@ def dist(posA, posB):
 	d = m.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2)
 	return d
 
+
 def radius(N, phi, xL=1.0, yL=0.1):
 	r = np.power((4 * xL * yL * phi) / (np.pi * N), 0.5)
 	return r
+
 
 def debug(string):
 	if verbose:
 		print(string)
 	return None
+
 
 def neighCheck(newpos, rad, ex_circles, delta=0.01):
 	neigh_OK = True
@@ -40,6 +43,7 @@ def neighCheck(newpos, rad, ex_circles, delta=0.01):
 			debug('Accord found: ' + str(dist(newpos,cpos) - 2 * rad - delta))
 			debug(str(cpos) + ' position: ' + str(ex_circles.index(cpos)))
 	return neigh_OK
+
 
 def generateCircles(N, phi, xL=1.0, yL=0.1, delta=0.01):
 	rad = radius(N, phi, xL, yL)
@@ -63,10 +67,12 @@ def generateCircles(N, phi, xL=1.0, yL=0.1, delta=0.01):
 			break
 	return circles
 
+
 def sortPos(pos_list):
 	xPos = [pos[0] for pos in pos_list]
 	yPos = [pos[1] for pos in pos_list]
 	return [xPos, yPos]
+
 
 def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
 	rad = radius(N, phi, xL, yL)
@@ -84,6 +90,7 @@ def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
 	plt.gca().set_aspect('equal')
 	plt.show()
 	return None
+
 
 # Special functions for simulating a parameter study with an increasing
 # number of particles while the volume fraction is being held constant
@@ -113,26 +120,31 @@ def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modi
 			file.write(line + '\n')
 		file.close()
 
+
 def flexArr(vals):
 	# This function converts a Python list to a flexPDE-styled
 	# array of the form array(val1, val2, ..., valN)
-	f_array = 'array('
-	for value in vals[]:
-		f_array = f_array + str(value)
-
-
-
+	f_array = 'array(' + ','.join([str(val) for val in vals]) + ')'
+	return f_array
 
 
 def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
-	rad_arr = [radius(N, phi, xL, yL) for N in N_arr]
-	stages = len(N_arr)
+	flexepath = ''
+
 	stagenum = 1
+	modpars = ['stagenum = ','number = ','xOff = ','yOff = ']
+	update = [0 for param in modpars]
 	
 	for N in N_arr:
 		raw_pos = generateCircles(N, phi, xL, yL, delta)
 		xPos = sortPos(raw_pos)[0]
 		yPos = sortPos(raw_pos)[1]
+		# Generate list of lines which are updated
+		update[0] = modpars[0] + str(stagenum)
+		update[1] = modpars[1] + str(N)
+		update[2] = modpars[2] + flexArr(xPos)
+		update[3] = modpars[3] + flexArr(yPos)
+		stagenum = stagenum + 1
 
 
 
