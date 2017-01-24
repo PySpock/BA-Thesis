@@ -11,7 +11,8 @@ import os
 
 # Set verbosity of console output globally for more info/debugging:
 verbose = False
-# verbosity setting
+# Be careful with verbosity setting. The console output gets quite big
+# for large numbers of particles/inlays/circles
 
 def dist(posA, posB):
 	d = m.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2)
@@ -58,7 +59,7 @@ def generateCircles(N, phi, xL=1.0, yL=0.1, delta=0.01):
 		ctr = ctr + 1
 		if ctr >= max_attempts:
 			print('Warning: Could not finish random circle generation in ' + str(max_attempts) + ' attempts!')
-			print('Generated ' + len(circles) + ' circles of expected N=' + str(N))
+			print('Generated ', len(circles), ' circles of expected N=', N )
 			break
 	return circles
 
@@ -84,16 +85,36 @@ def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
 	plt.show()
 	return None
 
-def writeFile(circ_pos, name):
+# Special functions for simulating a parameter study with an increasing
+# number of particles while the volume fraction is being held constant
+
+def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modifikation Ende}']):
+	# Open file in read-mode and update in-place in memory
 	try:
-		file = os.open(name + '.txt', 'w')
+		file = os.open(filename + '.pde', 'r')
 	except IOError:
-		print('Fatal Error while writing. Could not complete action.')
-		pass
+		print('Fatal Error while opening ' + filename + '.pde  Could not complete action.')
 	else:
-		pass
-	finally:
+		desc_lines = [line.strip() for line in file]
+		l_index = desc_lines.index(sep[0]) + 1
+		h_index = desc_lines.index(sep[1])
+		del desc_lines[l_index:h_index]
+		for newline in reversed(update_lines):
+			desc_lines.insert(l_index, newline)
 		file.close()
+
+	# Open file in write mode to overwrite with updated content
+	try:
+		file = os.open(filename + '.pde', 'w')
+	except IOError:
+		print('Fatal Error while writing ' + filename + '.pde  Could not complete action.')
+	else:
+		for line in desc_lines:
+			file.write(line + '\n')
+		file.close()
+
+
+
 
 def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
 	rad_arr = [radius(N, phi, xL, yL) for N in N_arr]
@@ -113,7 +134,7 @@ def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
 
 # Set simulation parameters # spheres = nC and volume fraction = phi
 
-nC = 5
+nC = 10
 phi = 0.2
 
 cpos = generateCircles(nC, phi)
@@ -124,4 +145,6 @@ print(sortPos(cpos))
 #Plot to control results:
 
 ctrlPlot(x,y,nC,phi)
+
+updateDescriptor(['spam','eggs'],'Test')
 
