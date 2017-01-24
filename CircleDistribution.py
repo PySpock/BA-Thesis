@@ -89,9 +89,9 @@ def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
 # number of particles while the volume fraction is being held constant
 
 def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modifikation Ende}']):
-	# Open file in read-mode and update in-place in memory
+	# Open file in read-mode and update content in-place in memory
 	try:
-		file = os.open(filename + '.pde', 'r')
+		file = open(filename + '.pde', 'r')
 	except IOError:
 		print('Fatal Error while opening ' + filename + '.pde  Could not complete action.')
 	else:
@@ -103,15 +103,23 @@ def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modi
 			desc_lines.insert(l_index, newline)
 		file.close()
 
-	# Open file in write mode to overwrite with updated content
+	# Open file in write mode to overwrite with updated content from memory
 	try:
-		file = os.open(filename + '.pde', 'w')
+		file = open(filename + '.pde', 'w')
 	except IOError:
 		print('Fatal Error while writing ' + filename + '.pde  Could not complete action.')
 	else:
 		for line in desc_lines:
 			file.write(line + '\n')
 		file.close()
+
+def flexArr(vals):
+	# This function converts a Python list to a flexPDE-styled
+	# array of the form array(val1, val2, ..., valN)
+	f_array = 'array('
+	for value in vals[]:
+		f_array = f_array + str(value)
+
 
 
 
