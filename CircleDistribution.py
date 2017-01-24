@@ -1,5 +1,5 @@
-# Generating script for center positions of N circles in a rectangle with
-# the dimensions xLen and yLen. The circles are non-overlapping and 
+# Brute force generating script for center positions of N circles in a 
+# rectangle with the dimensions xLen and yLen. The circles are non-overlapping and 
 # have a minimal distance delta to all other objects like boundaries
 # or neighbor circles
 
@@ -7,15 +7,19 @@ import numpy as np
 import math as m
 import random as rnd
 import matplotlib.pyplot as plt
-import logging
+import os
 
-# Set verbosity of console output globally for info/debugging:
-
-verbose = True
+# Set verbosity of console output globally for more info/debugging:
+verbose = False
+# verbosity setting
 
 def dist(posA, posB):
 	d = m.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2)
 	return d
+
+def radius(N, phi, xL=1.0, yL=0.1):
+	r = np.power((4 * xL * yL * phi) / (np.pi * N), 0.5)
+	return r
 
 def debug(string):
 	if verbose:
@@ -37,8 +41,7 @@ def neighCheck(newpos, rad, ex_circles, delta=0.01):
 	return neigh_OK
 
 def generateCircles(N, phi, xL=1.0, yL=0.1, delta=0.01):
-	rad = np.power((4 * xL * yL * phi) / (np.pi * N), 0.5)
-	print(rad)
+	rad = radius(N, phi, xL, yL)
 	intervX = xL - rad - delta
 	intervY = yL - rad - delta
 	ctr = 0
@@ -65,7 +68,7 @@ def sortPos(pos_list):
 	return [xPos, yPos]
 
 def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
-	rad = np.power((4 * xL * yL * phi) / (np.pi * N), 0.5)
+	rad = radius(N, phi, xL, yL)
 	fig, ax = plt.subplots()
 	inlays = []
 
@@ -81,10 +84,36 @@ def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
 	plt.show()
 	return None
 
+def writeFile(circ_pos, name):
+	try:
+		file = os.open(name + '.txt', 'w')
+	except IOError:
+		print('Fatal Error while writing. Could not complete action.')
+		pass
+	else:
+		pass
+	finally:
+		file.close()
+
+def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
+	rad_arr = [radius(N, phi, xL, yL) for N in N_arr]
+	stages = len(N_arr)
+	stagenum = 1
+	
+	for N in N_arr:
+		raw_pos = generateCircles(N, phi, xL, yL, delta)
+		xPos = sortPos(raw_pos)[0]
+		yPos = sortPos(raw_pos)[1]
+
+
+
+
+
+
 
 # Set simulation parameters # spheres = nC and volume fraction = phi
 
-nC = 10
+nC = 5
 phi = 0.2
 
 cpos = generateCircles(nC, phi)
