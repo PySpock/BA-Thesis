@@ -30,6 +30,12 @@ def debug(string):
 		print(string)
 
 
+def testSucc(nC, phi, delta=0.01):
+		for i in range(10):
+			print('Attempt ', i, ' at generating particles ...')
+			generateCircles(nC, phi, delta)
+
+
 def neighCheck(newpos, rad, ex_circles, delta=0.01):
 	neigh_OK = True
 	for cpos in ex_circles:
@@ -45,12 +51,19 @@ def neighCheck(newpos, rad, ex_circles, delta=0.01):
 	return neigh_OK
 
 
-def generateCircles(N, phi, xL=1.0, yL=0.1, delta=0.01):
+def generateCircles(N, phi, delta=0.01, xL=1.0, yL=0.1):
 	rad = radius(N, phi, xL, yL)
+	fail_chk = False
+	if rad > yL - delta:
+		fail_chk = True
+		print(' ')
+		print('Error: For N=', N, ' particles and Phi=', phi, 'the radius is bigger than the underlying')
+		print('matrix dimension. Could not generate particle position in accordance to conditions!')
+		return fail_chk, []
 	intervX = xL - rad - delta
 	intervY = yL - rad - delta
 	ctr = 0
-	max_attempts = 10000
+	max_attempts = 25000
 	circles = []
 	while len(circles) < N:
 		newX = rnd.uniform(-intervX,intervX)
@@ -62,10 +75,12 @@ def generateCircles(N, phi, xL=1.0, yL=0.1, delta=0.01):
 			debug('Length: ' + str(len(circles)))
 		ctr = ctr + 1
 		if ctr >= max_attempts:
+			fail_chk = True
+			print(' ')
 			print('Warning: Could not finish random circle generation in ' + str(max_attempts) + ' attempts!')
 			print('Generated ', len(circles), ' circles of expected N=', N )
 			break
-	return circles
+	return fail_chk, circles
 
 
 def sortPos(pos_list):
@@ -130,9 +145,10 @@ def flexArr(vals):
 	return f_array
 
 
-def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
+def simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -142,41 +158,55 @@ def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
 		return
 
 	stagenum = 0
-	modpars = ['stagenum = ','number = ','xOff = ','yOff = ']
+	modpars = ['stagenum = ','number = ','xOff = ','yOff = ','volFrac=']
 	update = [0 for param in modpars]
 	
 	for N in N_arr:
-		raw_pos = generateCircles(N, phi, xL, yL, delta)
+		fail_flag, raw_pos = generateCircles(N, phi, delta, xL, yL)
+		stagenum = stagenum + 1
+		if fail_flag:
+			print('Skipping simulation run ', stagenum, ' due to error during particle generation.')
+			print('Possible error #1: Particle radius bigger than matrix dimension')
+			print('Possible error #2: Failed to find valid positions for ', N, ' particles')
+			continue
 		xPos = sortPos(raw_pos)[0]
 		yPos = sortPos(raw_pos)[1]
-		stagenum = stagenum + 1
 		# Generate list of lines which are updated
 		update[0] = modpars[0] + str(stagenum)
 		update[1] = modpars[1] + str(int(N))
 		update[2] = modpars[2] + flexArr(xPos)
 		update[3] = modpars[3] + flexArr(yPos)
+		update[4] = modpars[4] + str(phi)
 		# Update the descriptor file
 		updateDescriptor(update, descriptorname)
 		# Run simulation for current iteration in flexPDE
 		print('Doing stage run ', stagenum, ' Simulating ', N, 'particles/inlays.')
 		subprocess.call([flexepath, descriptorpath + '\\' + descriptorname])
-	print('Finished simulation run successfully!')
+		print(' ')
+	print('Finished simulation run!')
 
 
 
 # Set simulation parameters # spheres = nC and volume fraction = phi
 
-nC = 10
-phi = 0.2
+nC = 1
+phi = 0.05
 
-cpos = generateCircles(nC, phi)
+fail_chk, cpos = generateCircles(nC, phi)
 x = sortPos(cpos)[0]
 y = sortPos(cpos)[1]
-# print(sortPos(cpos))
+#print(sortPos(cpos))
 
 # Plot to control results:
 
-# ctrlPlot(x,y,nC,phi)
+#ctrlPlot(x,y,nC,phi)
 
-paramN = np.arange(1,101,1)
-simuRun(paramN, 0.2)
+# Test run loop to check the success rate of the circle generation
+# with the specified parameters:
+
+#testSucc(nC, phi)
+
+# Parameter run:
+
+paramN = np.arange(1,51,1)
+simuRun(paramN, phi)

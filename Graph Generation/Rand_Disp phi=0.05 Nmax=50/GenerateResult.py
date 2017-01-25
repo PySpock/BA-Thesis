@@ -35,7 +35,7 @@ def separateKeysVals(line_list, delimiter):
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
-resultfile = 'Ninc_Rand.txt'
+resultfile = 'RndDsp50.txt'
 delimiter = '-----'
 
 lines = readFile(resultfile)
