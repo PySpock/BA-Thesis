@@ -8,6 +8,7 @@ import math as m
 import random as rnd
 import matplotlib.pyplot as plt
 import os
+import subprocess
 
 # Set verbosity of console output globally for more info/debugging:
 verbose = False
@@ -27,7 +28,6 @@ def radius(N, phi, xL=1.0, yL=0.1):
 def debug(string):
 	if verbose:
 		print(string)
-	return None
 
 
 def neighCheck(newpos, rad, ex_circles, delta=0.01):
@@ -89,7 +89,6 @@ def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
 		ax.add_artist(inlay)
 	plt.gca().set_aspect('equal')
 	plt.show()
-	return None
 
 
 # Special functions for simulating a parameter study with an increasing
@@ -98,11 +97,13 @@ def ctrlPlot(xPos, yPos, N, phi, xL=1.0, yL=0.1):
 def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modifikation Ende}']):
 	# Open file in read-mode and update content in-place in memory
 	try:
-		file = open(filename + '.pde', 'r')
-	except IOError:
-		print('Fatal Error while opening ' + filename + '.pde  Could not complete action.')
+		file = open(filename, 'r')
+	except (IOError, FileNotFoundError):
+		print('Fatal Error while opening ' + filename + ' Could not complete action.')
+		return
 	else:
-		desc_lines = [line.strip() for line in file]
+		raw_lines = list(file)
+		desc_lines = [line.strip() for line in raw_lines]
 		l_index = desc_lines.index(sep[0]) + 1
 		h_index = desc_lines.index(sep[1])
 		del desc_lines[l_index:h_index]
@@ -112,9 +113,10 @@ def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modi
 
 	# Open file in write mode to overwrite with updated content from memory
 	try:
-		file = open(filename + '.pde', 'w')
+		file = open(filename, 'w')
 	except IOError:
-		print('Fatal Error while writing ' + filename + '.pde  Could not complete action.')
+		print('Fatal Error while writing ' + filename + ' Could not complete action.')
+		return
 	else:
 		for line in desc_lines:
 			file.write(line + '\n')
@@ -129,9 +131,17 @@ def flexArr(vals):
 
 
 def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
-	flexepath = ''
+	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
+	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	descriptorname = 'Rand_Disp Sphere.pde'
+	try:
+		os.chdir(descriptorpath)
+	except OSError:
+		print('Error: Could not change directory to ' + descriptorpath)
+		print('Aborting simulation run.')
+		return
 
-	stagenum = 1
+	stagenum = 0
 	modpars = ['stagenum = ','number = ','xOff = ','yOff = ']
 	update = [0 for param in modpars]
 	
@@ -139,16 +149,18 @@ def simuRun(N_arr, phi, xL=1.0, yL=0.1, delta=0.01):
 		raw_pos = generateCircles(N, phi, xL, yL, delta)
 		xPos = sortPos(raw_pos)[0]
 		yPos = sortPos(raw_pos)[1]
+		stagenum = stagenum + 1
 		# Generate list of lines which are updated
 		update[0] = modpars[0] + str(stagenum)
-		update[1] = modpars[1] + str(N)
+		update[1] = modpars[1] + str(int(N))
 		update[2] = modpars[2] + flexArr(xPos)
 		update[3] = modpars[3] + flexArr(yPos)
-		stagenum = stagenum + 1
-
-
-
-
+		# Update the descriptor file
+		updateDescriptor(update, descriptorname)
+		# Run simulation for current iteration in flexPDE
+		print('Doing stage run ', stagenum, ' Simulating ', N, 'particles/inlays.')
+		subprocess.call([flexepath, descriptorpath + '\\' + descriptorname])
+	print('Finished simulation run successfully!')
 
 
 
@@ -160,11 +172,11 @@ phi = 0.2
 cpos = generateCircles(nC, phi)
 x = sortPos(cpos)[0]
 y = sortPos(cpos)[1]
-print(sortPos(cpos))
+# print(sortPos(cpos))
 
-#Plot to control results:
+# Plot to control results:
 
-ctrlPlot(x,y,nC,phi)
+# ctrlPlot(x,y,nC,phi)
 
-updateDescriptor(['spam','eggs'],'Test')
-
+paramN = np.arange(1,101,1)
+simuRun(paramN, 0.2)
