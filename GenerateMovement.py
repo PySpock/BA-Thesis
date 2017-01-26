@@ -46,12 +46,14 @@ def nearmiss_Spheres(phi, plot_points, delta=0.01, xL=1.0, yL=0.1):
 	xPosR = -xPosL
 	yPosL = [-yL + r + delta for i in range(len(xPosL))]
 	yPosR = [-entry for entry in yPosL]
-	return xPosL, yPosL, xPosR, yPosR
+	positions = [xPosL,yPosL,xPosR,yPosR]
+	return positions
 
 
-x, y = sinusoid_Mov(0.025, 75, 3)
-xl, yl, xr, yr = nearmiss_Spheres(0.025, 75)
-plt.plot(x, y)
-plt.plot(xl, yl, 'ro')
-plt.plot(xr, yr, 'bo')
-plt.show()
+#x, y = sinusoid_Mov(0.025, 75, 3)
+pos = nearmiss_Spheres(0.025, 50)
+
+print(pos)
+
+#plt.plot(x, y)
+#plt.show()
