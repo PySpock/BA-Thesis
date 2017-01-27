@@ -122,8 +122,8 @@ def effPhaseContrast(kInlay, kMatrix, kEff, rP, rInt):
 # Some meta-function-packages for easier plotting
 
 def funcPack_maxwellbased():
-	package = {'Maxwell' : maxwell, 'Rayleigh' : rayleigh,
-				'RayleighYY' : rayleighYY, 'Chiew Gland' : ChiewGland}
+	package = {'Maxwell' : [maxwell, 'k-'], 'Rayleigh' : [rayleigh, 'k:'],
+				'RayleighYY' : [rayleighYY, 'k--'], 'Chiew Gland' : [ChiewGland, 'k-.']}
 	return package
 
 def funcPack_hasseljohn():

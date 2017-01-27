@@ -17,7 +17,8 @@ def dist(pointA, pointB):
 def sinusoid_Mov(phi, plot_points, periodes=1, delta=0.01, xL=1.0, yL=0.1):
 	# Sanity check of sphere size
 	r = radius(1, phi, xL, yL)
-	if r - yL < -delta:
+	print(r)
+	if yL - r < delta:
 		print('Error: Sphere with volume fraction ', phi, ' exceeds the underlying mesh size.')
 		print('Aborting position generation')
 		return (0, 0)
@@ -30,30 +31,36 @@ def sinusoid_Mov(phi, plot_points, periodes=1, delta=0.01, xL=1.0, yL=0.1):
 	boundary = xL - r - delta
 	xPos = np.linspace(-boundary, boundary, plot_points)
 	yPos = amplitude * np.sin((periodes * np.pi) / boundary * xPos)
-	return xPos, yPos
+	positions = [xPos, yPos]
+	return positions
 
-def nearmiss_Spheres(phi, plot_points, delta=0.01, xL=1.0, yL=0.1):
+def nearmiss_Spheres(phi, plot_points, delta=0.01, refine=False, lo=-0.3, hi=0.3, ref_points=75, xL=1.0, yL=0.1):
 	# Pre-conducted sanity check whether the spheres fit into the underlying
 	# mesh with the specified parameters
-	r = radius(3, phi, xL, yL)
+	r = radius(2, phi, xL, yL)
 	print(r)
 	if 2 * r + 3 * delta > yL:
 		print('Error: Current parameters and safety distances imply a mesh collision')
 		print('Aborting position generation!')
 		return (0, 0, 0, 0)
 	boundary = xL - r - delta
-	xPosL = np.linspace(-boundary, boundary, plot_points)
+	if refine:
+		xPosL = np.linspace(-boundary, lo, plot_points // 2, endpoint=False)
+		xPosL = np.append(xPosL, np.linspace(lo, hi, ref_points, endpoint=False))
+		xPosL = np.append(xPosL, np.linspace(hi, boundary, plot_points // 2))
+	else:
+		xPosL = np.linspace(-boundary, boundary, plot_points)
 	xPosR = -xPosL
-	yPosL = [-yL + r + delta for i in range(len(xPosL))]
-	yPosR = [-entry for entry in yPosL]
+	yPosL = -yL + r + delta 
+	yPosR = yPosL
 	positions = [xPosL,yPosL,xPosR,yPosR]
 	return positions
 
 
-#x, y = sinusoid_Mov(0.025, 75, 3)
-pos = nearmiss_Spheres(0.025, 50)
-
-print(pos)
+pos_sin = sinusoid_Mov(0.005, 75, 1)
+#pos = nearmiss_Spheres(0.025, 50, 0.0065, True)
+#print(pos)
+print(pos_sin)
 
 #plt.plot(x, y)
 #plt.show()
