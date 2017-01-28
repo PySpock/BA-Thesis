@@ -59,10 +59,10 @@ elh_keys, elh_vals = getData(resf_ElH)
 
 # Code, e.g. plotting
 
-print(sp_keys)
-print(cb_keys)
-print(cb_vals)
-print(rh_vals)
+#print(sp_keys)
+#print(cb_keys)
+#print(cb_vals)
+#print(rh_vals)
 
 vF = np.linspace(0.005, 0.2, 250)
 ki = 1.00
@@ -78,7 +78,7 @@ itr = 0
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
-ax.set_ylim(0.00975,0.024)
+ax.set_ylim(0.00975,0.0315)
 ax.set_xlim(0,0.21)
 ax.set_xlabel('Volume fraction $\phi$ ')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
@@ -88,8 +88,8 @@ ax.plot(cb_vals[1], cb_vals[0], 'gs', label='Quadratform')
 ax.plot(tr_vals[1], tr_vals[0], 'y^', label='Dreieicksform')
 ax.plot(itr_vals[1], itr_vals[0], 'mv', label='Dreicksform inv.')
 ax.plot(rh_vals[1], rh_vals[0], 'bd', label='Rhombusform')
-ax.plot(elb_vals[1], elb_vals[0], 'kx', label='Ellipsenform waager.')
-ax.plot(elb_vals[1], elb_vals[0], 'mh', label='Ellipsenform senkr.')
+ax.plot(elb_vals[1], elb_vals[0], 'kp', label='Ellipsenform waager.')
+ax.plot(elh_vals[1], elh_vals[0], 'ch', label='Ellipsenform senkr.')
 
 ax.legend(loc=2)
 
