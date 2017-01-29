@@ -32,18 +32,20 @@ def separateKeysVals(line_list, delimiter):
 		#	val_lines_clean.append([float(value) for value in cache])
 	return key_lines, vals_split
 
+
+def getData(resultfile, delim='-----'):
+	file_lines = readFile(resultfile)
+	key_data, val_data = separateKeysVals(file_lines, delim)
+	return key_data, val_data
+
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
 per_res = 'PerRes.txt'
 stat_res = 'StatRes.txt'
-delimiter = '-----'
 
-per_lines = readFile(per_res)
-pkeys, pvals = separateKeysVals(per_lines, delimiter)
-
-stat_lines = readFile(stat_res)
-skeys, svals = separateKeysVals(stat_lines, delimiter)
+pkeys, pvals = getData(per_res)
+skeys, svals = getData(stat_res)
 
 # Code, e.g. plotting
 
@@ -51,12 +53,22 @@ print(pkeys)
 print(pvals)
 print(svals)
 
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
 
-plt.rc('font', family='serif')
-plt.plot(svals[2], 1000*svals[0], 'ro', label='Feste Randbedingung')
-plt.plot(pvals[2], 1000*pvals[0], 'g^', label='Periodische Randbedingung')
-plt.xlabel('Position der Inhomogenität ' r'x / m')
-plt.ylabel('Effektive Wärmeleitfähigkeit   ' r'$\mathregular{\lambda_{eff} \: / \: mW(m \cdot K)^{-1}}$')
-plt.legend(loc=8)
-plt.savefig('Stat_Per_Comp.pdf')
+#ax.set_xlim(0.008, 0.385)
+#ax.set_ylim(0.008, 0.065)
+ax.set_xlabel('Position der Inhomogenität $x$ in m')
+ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
+
+
+ax.plot(svals[2], 1000*svals[0], 'ro', label='Feste Randbedingung')
+ax.plot(pvals[2], 1000*pvals[0], 'g^', label='Periodische Randbedingung')
+
+
+ax.legend(loc=8)
+
+fig.savefig('Per_Stat Comp moving Sphere.eps')
+fig.savefig('Per_Stat Comp moving Sphere.pdf')
+fig.savefig('Per_Stat Comp moving Sphere', dpi=800)
 plt.show()

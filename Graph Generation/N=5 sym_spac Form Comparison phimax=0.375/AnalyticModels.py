@@ -127,14 +127,14 @@ def funcPack_maxwellbased():
 	return package
 
 def funcPack_hasseljohn():
-	package = {'Spherical Hasselman Johnson' : sphericalHasselmanJohnson,
-				'Cylindrical Hasselman Johnson' : cylindricalHasselmanJohnson,
-				'Flat-plate Hasselman Johnson' : flatplateHasselmanJohnson}
+	package = {'Spherical Hasselman Johnson' : [sphericalHasselmanJohnson, 'r-'],
+				'Cylindrical Hasselman Johnson' : [cylindricalHasselmanJohnson, 'g-'],
+				'Flat-plate Hasselman Johnson' : [flatplateHasselmanJohnson, 'b-']}
 	return package
 
 def funcPack_lewisniels():
-	package = {'Simple cubic lattice Lewis Nielsen' : simplecubicLewisNielsen,
-				'Random close spherical Lewis Nielsen' : randomcloseLewisNielsen,
-				'Random loose spherical Lewis Nielsen' : randomlooseLewisNielsen}
+	package = {'Simple cubic lattice Lewis Nielsen' : [simplecubicLewisNielsen, 'y-'],
+				'Random close spherical Lewis Nielsen' : [randomcloseLewisNielsen, 'm-'],
+				'Random loose spherical Lewis Nielsen' : [randomlooseLewisNielsen, 'c-']}
 	return package
 

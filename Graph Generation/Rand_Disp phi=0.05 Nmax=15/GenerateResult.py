@@ -32,19 +32,38 @@ def separateKeysVals(line_list, delimiter):
 		#	val_lines_clean.append([float(value) for value in cache])
 	return key_lines, vals_split
 
+def getData(resultfile, delim='-----'):
+	file_lines = readFile(resultfile)
+	key_data, val_data = separateKeysVals(file_lines, delim)
+	return key_data, val_data
+
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
-resultfile = 'RndDsp.txt'
-delimiter = '-----'
+rfile = 'RndDsp.txt'
 
-lines = readFile(resultfile)
-keys, vals = separateKeysVals(lines, delimiter)
+keys, vals = getData(rfile)
 
 # Code, e.g. plotting
 
 print(keys)
 print(vals)
 
-plt.plot(vals[3],vals[0],'ro')
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+
+#ax.set_xlim(0.008, 0.385)
+#ax.set_ylim(0.008, 0.065)
+ax.set_xlabel('Anzahl der Inhomogenitäten N')
+ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
+
+
+ax.plot(vals[3], vals[0], 'ro', label='Simulationswert $\lambda$(N)')
+
+
+ax.legend(loc=1)
+
+fig.savefig('Rand_Disp phi=0.05 Nmax=50.eps')
+fig.savefig('Rand_Disp phi=0.05 Nmax=50.pdf')
+fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
 plt.show()

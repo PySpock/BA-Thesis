@@ -87,6 +87,7 @@ for i, sv, pv, ngval in zip(itr, stat_vals, per_vals, ng_vals):
 	configPlot(plotloc=8)
 
 	fig.savefig('N=1 movSphere per_stat Comp ngrid=' + str(ngval) + '.pdf')
+	fig.savefig('N=1 movSphere per_stat Comp ngrid=' + str(ngval) + '.png', dpi=800)
 	fig.clear()
 
 """

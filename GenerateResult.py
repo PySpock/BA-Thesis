@@ -32,35 +32,44 @@ def separateKeysVals(line_list, delimiter):
 		#	val_lines_clean.append([float(value) for value in cache])
 	return key_lines, vals_split
 
+
+
+def getData(resultfile, delim='-----'):
+	file_lines = readFile(resultfile)
+	key_data, val_data = separateKeysVals(file_lines, delim)
+	return key_data, val_data
+
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
-resultfile = 'RandSpheres.txt'
-delimiter = '-----'
+per_res = 'PerRes.txt'
+stat_res = 'StatRes.txt'
 
-lines = readFile(resultfile)
-keys, vals = separateKeysVals(lines, delimiter)
+pkeys, pvals = getData(per_res)
+skeys, svals = getData(stat_res)
 
 # Code, e.g. plotting
 
-print(keys)
-print(vals)
+print(pkeys)
+print(pvals)
+print(svals)
 
-vF = np.linspace(0.005,0.125,200)
-ki = 1.00
-km = 0.01
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
 
-mx = am.maxwell(ki,km,vF)
-cg = am.ChiewGland(ki,km,vF)
-rl = am.rayleigh(ki,km,vF)
-rlYY = am.rayleighYY(ki,km,vF)
-mean_rl = 0.5 * (rl + rlYY)
+#ax.set_xlim(0.008, 0.385)
+#ax.set_ylim(0.008, 0.065)
+ax.set_xlabel('Position der Inhomogenität $x$ in m')
+ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
-plt.plot(vals[1], vals[0], 'ro', label='kEff from FEM/numerical')
-plt.plot(vF, mx, 'g-', label='Maxwell')
-plt.plot(vF, cg, 'b-', label='ChiewGland')
-plt.plot(vF, rl, 'y-', label='Rayleigh')
-plt.plot(vF, rlYY, 'm-', label='RayleighYY')
-plt.plot(vF, mean_rl, 'k-', label='Mean of Rayl. and Rayl.YY')
-plt.legend(loc=2)
+
+ax.plot(svals[2], 1000*svals[0], 'ro', label='Feste Randbedingung')
+ax.plot(pvals[2], 1000*pvals[0], 'g^', label='Periodische Randbedingung')
+
+
+ax.legend(loc=8)
+
+fig.savefig('Per_Stat Comp moving Sphere.eps')
+fig.savefig('Per_Stat Comp moving Sphere.pdf')
+fig.savefig('Per_Stat Comp moving Sphere', dpi=800)
 plt.show()
