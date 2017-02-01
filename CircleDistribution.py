@@ -9,6 +9,7 @@ import random as rnd
 import matplotlib.pyplot as plt
 import os
 import subprocess
+import ExtractScript as es
 
 # Set verbosity of console output globally for more info/debugging:
 verbose = False
@@ -145,7 +146,7 @@ def flexArr(vals):
 	return f_array
 
 
-def simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
+def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
 	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
 	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50'
@@ -186,6 +187,14 @@ def simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	print('Finished simulation run!')
 
 
+def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
+	for itr in range(1, avg_runs):
+		print('############')
+		print('Conducting averaging run', itr, ' of ', avg_runs)
+		single_simuRun(N_arr, phi, delta, xL, yL)
+		es.compileResults('Avg_' + str(itr))
+
+
 
 # Set simulation parameters # spheres = nC and volume fraction = phi
 
@@ -208,5 +217,5 @@ y = sortPos(cpos)[1]
 
 # Parameter run:
 
-paramN = np.arange(1,51,1)
-simuRun(paramN, phi)
+paramN = np.arange(1, 10, 1)
+average_simuRun(paramN, phi, 3)
