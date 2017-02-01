@@ -167,14 +167,18 @@ def compileAvgResults(startString='Avg_'):
 	# 3D array with index scheme: axis0 -> report parameter/key | axis1 -> stagerun
 	# axis2 -> averaging run
 	result_array = np.stack(tuple(avg_results), axis=2)
-	kMean = result_array.mean(axis=2)[0]
-	kSdev = result_array.std(axis=2)[0]
-	kSerr = kSdev / np.sqrt(avg_runs)
+	kMean = np.expand_dims(result_array.mean(axis=2)[0], axis=0)
+	kSdev = np.expand_dims(result_array.std(axis=2)[0], axis=0)
+	kSerr = np.exoand_dims(kSdev / np.sqrt(avg_runs), axis=0)
 
 	avg_compilated_arr = np.concatenate((kMean, kSdev, kSerr, result_array[:, :, 0]))
 
+	additional_keys = ['Standard error', 'Standard deviation', 'Mean heat cond. of avg. runs']
+	cache = list(reversed(keys))
+	keys = list(reversed(cache + additional_keys))
+	keys = [''.join([str_item, '\n']) for str_item in keys]
 
-
+	np.savetxt('AverageEndresult.txt', avg_compilated_arr, delimiter=',', header=keys)
 
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
@@ -236,6 +240,7 @@ def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
 		print(' ')
 		single_simuRun(N_arr, phi, delta, xL, yL)
 		es.compileResults('Avg_' + str(itr))
+	compileAvgResults()
 
 
 
