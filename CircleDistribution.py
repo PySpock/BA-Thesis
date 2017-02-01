@@ -148,8 +148,8 @@ def flexArr(vals):
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
-	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50'
+	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -182,15 +182,27 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 		updateDescriptor(update, descriptorname)
 		# Run simulation for current iteration in flexPDE
 		print('Doing stage run ', stagenum, ' Simulating ', N, 'particles/inlays.')
-		subprocess.call([flexepath, descriptorpath + '\\' + descriptorname])
+		while True:
+			try:
+				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=10)
+			except TimeoutExpired:
+				print(' ')
+				print('FlexPDE6n.exe timed out. Retrying current simulation ...')
+				print(' ')
+				continue
+			else:
+				break
 		print(' ')
 	print('Finished simulation run!')
 
 
 def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
-	for itr in range(1, avg_runs):
-		print('############')
+	for itr in range(1, avg_runs + 1):
+		print(' ')
+		print('##########################################')
 		print('Conducting averaging run', itr, ' of ', avg_runs)
+		print('##########################################')
+		print(' ')
 		single_simuRun(N_arr, phi, delta, xL, yL)
 		es.compileResults('Avg_' + str(itr))
 
@@ -217,5 +229,5 @@ y = sortPos(cpos)[1]
 
 # Parameter run:
 
-paramN = np.arange(1, 10, 1)
+paramN = np.arange(1, 21, 1)
 average_simuRun(paramN, phi, 3)

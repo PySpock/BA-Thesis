@@ -77,55 +77,54 @@ def compileResults(resultfile_name, delimiter='-----', splitChar='=', startStrin
 		mf_vals.append(vals)
 	writeFile(resultfile_name, mf_keys, mf_vals)
 
+if __name__ == 'main':
+	print("Stebix Python Script Version 0.1")
+	print(' ')
+	print(' ')
+	print('Creation Date 2017-01-06')
+	print('Current date: ', dt.date.today())
+	print(' ')
+	print(' ')
 
-
-print("Stebix Python Script Version 0.1")
-print(' ')
-print(' ')
-print('Creation Date 2017-01-06')
-print('Current date: ', dt.date.today())
-print(' ')
-print(' ')
-
-while True:
 	while True:
-		print('Please input the directory with double slashes, where the flexPDE summaries are saved.')
-		path = input('Input path: ')
-		if os.path.isdir(path):
-			print('Success, directory exists')
-			os.chdir(path)
+		while True:
+			print('Please input the directory with double slashes, where the flexPDE summaries are saved.')
+			path = input('Input path: ')
+			if os.path.isdir(path):
+				print('Success, directory exists')
+				os.chdir(path)
+				break
+			print('Error: No such directory found')
+
+
+		print('Listing txt-content of set working directory ', os.getcwd(), ' ...')
+		print(' ')
+
+		exTXT = False
+		for entry in os.listdir(os.getcwd()):
+			if entry.endswith('.txt'):
+				print(entry)
+				exTXT = True
+		if not exTXT:
+			print('No existing TXT-Files in this directory!') 
+
+		print(' ')
+		print(' ')
+		print('Please input the name for the results file: ')
+		name = input()
+		print('Creating result file ' + str(name) + '.txt ...')
+		compileResults(name)
+		print('Done!')
+
+		cont = True
+		while True:
+			print('Continue with another task [C] or exit [X]?')
+			action = input()
+			if action == 'C' or action == 'c':
+				break
+			elif action == 'X' or action == 'x':
+				cont = False
+				break
+			print('Invalid input!')
+		if cont == False:
 			break
-		print('Error: No such directory found')
-
-
-	print('Listing txt-content of set working directory ', os.getcwd(), ' ...')
-	print(' ')
-
-	exTXT = False
-	for entry in os.listdir(os.getcwd()):
-		if entry.endswith('.txt'):
-			print(entry)
-			exTXT = True
-	if not exTXT:
-		print('No existing TXT-Files in this directory!') 
-
-	print(' ')
-	print(' ')
-	print('Please input the name for the results file: ')
-	name = input()
-	print('Creating result file ' + str(name) + '.txt ...')
-	compileResults(name)
-	print('Done!')
-
-	cont = True
-	while True:
-		print('Continue with another task [C] or exit [X]?')
-		action = input()
-		if action == 'C' or action == 'c':
-			break
-		elif action == 'X' or action == 'x':
-			cont = False
-			break
-		print('Invalid input!')
-	if cont == False:
-		break
