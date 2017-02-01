@@ -61,24 +61,34 @@ def writeFile(name, keys, vals):
 		file.write('\n')
 	file.close()
 
+def extractData(resultfiles):
+	mf_keys = []
+	mf_vals = []
+	for filename in resultfiles:
+		try:
+			file = open(filename, 'r')
+		except IOError:
+			print('Error opening file ', filename, ' - Aborting')
+			return
+		else:
+			# Inhalt des Files wird als Liste eingelesen, Element von sf_content entspricht einer Zeile
+			sf_content = list(file)
+			sf_cleanData = cleanupData(sf_content, delimiter)
+			keys, vals = splitData(sf_cleanData, splitChar)
+			mf_keys = keys
+			mf_vals.append(vals)
+			file.close()
+	return mf_keys, mf_vals
+
 def compileResults(resultfile_name, delimiter='-----', splitChar='=', startString='Sim_Info_'):
 	# Wrapper-Funktion die die Aktionen der obigen Teilprozeduren zur besseren
 	# Code-Wiederverwertbarkeit zusammenfasst
 	resultfiles = getFiles(startString)
-	mf_keys = []
-	mf_vals = []
-	for filename in resultfiles:
-		file = open(filename, 'r')
-		# Inhalt des Files wird als Liste eingelesen, Element von content entspricht einer Zeile
-		sf_content = list(file)
-		sf_cleanData = cleanupData(sf_content, delimiter)
-		keys, vals = splitData(sf_cleanData, splitChar)
-		mf_keys = keys
-		mf_vals.append(vals)
+	mf_keys, mf_vals = extractData(resultfiles)
 	writeFile(resultfile_name, mf_keys, mf_vals)
 
 if __name__ == 'main':
-	print("Stebix Python Script Version 0.1")
+	print('Stebix Python Script Version 0.1')
 	print(' ')
 	print(' ')
 	print('Creation Date 2017-01-06')

@@ -146,10 +146,41 @@ def flexArr(vals):
 	return f_array
 
 
+def compileAvgResults(startString='Avg_'):
+	# This function collects the data from every average/meta-simulation run and collects
+	# it into one file. Standard deviation and error are calculated for the mean heat conduct.
+	avg_result_files = es.getFiles(startString)
+	avg_results = []
+	keys = []
+	for result_file in avg_result_files:
+		# Open average_res file and seperate it into keys and vals
+		# no try-block since getFiles assures existence of files
+		curr_file = open(filename, 'r')
+		lines_raw = list(curr_file)
+		lines = [line.strip() for line in lines_raw]
+		split_index = lines.index('-----')
+		keys = lines[:split_index]
+		vals_str = lines[split_index + 1:]
+		vals = [entry.split(',') for entry in vals_str]
+		avg_results.append(np.asarray(vals, dtype=np.float64))
+
+	# 3D array with index scheme: axis0 -> report parameter/key | axis1 -> stagerun
+	# axis2 -> averaging run
+	result_array = np.stack(tuple(avg_results), axis=2)
+	kMean = result_array.mean(axis=2)[0]
+	kSdev = result_array.std(axis=2)[0]
+	kSerr = kSdev / np.sqrt(avg_runs)
+
+	avg_compilated_arr = np.concatenate((kMean, kSdev, kSerr, result_array[:, :, 0]))
+
+
+
+
+
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
-	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50'
+	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -184,8 +215,8 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 		print('Doing stage run ', stagenum, ' Simulating ', N, 'particles/inlays.')
 		while True:
 			try:
-				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=10)
-			except TimeoutExpired:
+				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=20)
+			except subprocess.TimeoutExpired:
 				print(' ')
 				print('FlexPDE6n.exe timed out. Retrying current simulation ...')
 				print(' ')
@@ -229,5 +260,5 @@ y = sortPos(cpos)[1]
 
 # Parameter run:
 
-paramN = np.arange(1, 21, 1)
-average_simuRun(paramN, phi, 3)
+#paramN = np.arange(1, 21, 1)
+#average_simuRun(paramN, phi, 3)
