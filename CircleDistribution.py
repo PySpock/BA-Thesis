@@ -146,13 +146,29 @@ def flexArr(vals):
 	return f_array
 
 
-def compileAvgResults(startString='Avg_'):
+def compileAvgResults(startString='Avg_Res'):
 	# This function collects the data from every average/meta-simulation run and collects
 	# it into one file. Standard deviation and error are calculated for the mean heat conduct.
+
+	avg_run_files = es.getFiles(startString)
+	with open(avg_run_files[0], 'r') as canary_file:
+		content = list(canary_file)
+		print(content)
+		last_header_line = content.index('-----\n') + 1
+
+	for single_runfile in avg_run_files:
+		single_run_arr = np.genfromtxt(single_runfile, dtype=np.float64, delimiter=',',
+										skip_header=last_header_line, autostrip=True)
+		print(single_run_arr)
+
+
+
+	"""
 	avg_result_files = es.getFiles(startString)
+	avg_runs = len(avg_result_files)
 	avg_results = []
 	keys = []
-	for result_file in avg_result_files:
+	for filename in avg_result_files:
 		# Open average_res file and seperate it into keys and vals
 		# no try-block since getFiles assures existence of files
 		curr_file = open(filename, 'r')
@@ -162,29 +178,31 @@ def compileAvgResults(startString='Avg_'):
 		keys = lines[:split_index]
 		vals_str = lines[split_index + 1:]
 		vals = [entry.split(',') for entry in vals_str]
-		avg_results.append(np.asarray(vals, dtype=np.float64))
-
+		float_vals = [[float(str_val) for str_val in sublist] for sublist in vals]
+		avg_results.append(float_vals)
+		print(filename)
+		print(avg_results)
 	# 3D array with index scheme: axis0 -> report parameter/key | axis1 -> stagerun
 	# axis2 -> averaging run
 	result_array = np.stack(tuple(avg_results), axis=2)
 	kMean = np.expand_dims(result_array.mean(axis=2)[0], axis=0)
 	kSdev = np.expand_dims(result_array.std(axis=2)[0], axis=0)
-	kSerr = np.exoand_dims(kSdev / np.sqrt(avg_runs), axis=0)
-
+	kSerr = np.expand_dims(kSdev / np.sqrt(avg_runs), axis=0)
+	print('resarr  ', result_array)
+	print('kmean', kMean)
 	avg_compilated_arr = np.concatenate((kMean, kSdev, kSerr, result_array[:, :, 0]))
-
 	additional_keys = ['Standard error', 'Standard deviation', 'Mean heat cond. of avg. runs']
 	cache = list(reversed(keys))
 	keys = list(reversed(cache + additional_keys))
 	keys = [''.join([str_item, '\n']) for str_item in keys]
-
 	np.savetxt('AverageEndresult.txt', avg_compilated_arr, delimiter=',', header=keys)
+	"""
 
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
-	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
+	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -239,7 +257,7 @@ def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
 		print('##########################################')
 		print(' ')
 		single_simuRun(N_arr, phi, delta, xL, yL)
-		es.compileResults('Avg_' + str(itr))
+		es.compileResults('Avg_Res_' + str(itr))
 	compileAvgResults()
 
 
@@ -265,5 +283,5 @@ y = sortPos(cpos)[1]
 
 # Parameter run:
 
-paramN = np.arange(1, 21, 1)
-average_simuRun(paramN, phi, 3)
+paramN = np.arange(1, 4, 1)
+average_simuRun(paramN, phi, 2)
