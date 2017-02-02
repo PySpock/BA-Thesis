@@ -183,8 +183,8 @@ def compileAvgResults(startString='Avg_'):
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
-	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
+	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -265,5 +265,5 @@ y = sortPos(cpos)[1]
 
 # Parameter run:
 
-#paramN = np.arange(1, 21, 1)
-#average_simuRun(paramN, phi, 3)
+paramN = np.arange(1, 21, 1)
+average_simuRun(paramN, phi, 3)

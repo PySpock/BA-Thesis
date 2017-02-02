@@ -61,7 +61,7 @@ def writeFile(name, keys, vals):
 		file.write('\n')
 	file.close()
 
-def extractData(resultfiles):
+def extractData(resultfiles, delimiter='-----', splitChar='='):
 	mf_keys = []
 	mf_vals = []
 	for filename in resultfiles:
