@@ -179,8 +179,8 @@ def compileAvgResults(startString='Avg_Res'):
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
-	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
+	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -213,13 +213,25 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 		updateDescriptor(update, descriptorname)
 		# Run simulation for current iteration in flexPDE
 		print('Doing stage run ', stagenum, ' Simulating ', N, 'particles/inlays.')
+		max_timeouts = 10
+		timeouts = 0
 		while True:
 			try:
-				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=15)
+				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=10)
 			except subprocess.TimeoutExpired:
 				print(' ')
 				print('FlexPDE6n.exe timed out. Retrying current simulation ...')
 				print(' ')
+				timeouts += 1
+				if timeouts >= max_timeouts:
+					print('Maximum timeout threshold of ', max_timeouts, ' reached.')
+					print('Re-generating current geometry and restarting ...')
+					__, raw_pos = generateCircles(N, phi, delta, xL, yL)
+					xPos = sortPos(raw_pos)[0]
+					yPos = sortPos(raw_pos)[1]
+					update[2] = modpars[2] + flexArr(xPos)
+					update[3] = modpars[3] + flexArr(yPos)
+					updateDescriptor(update, descriptorname)
 				continue
 			else:
 				break
@@ -261,5 +273,5 @@ y = sortPos(cpos)[1]
 
 # Parameter run:
 
-paramN = np.arange(1, 26, 1)
-average_simuRun(paramN, phi, 10)
+paramN = np.arange(1, 16, 1)
+average_simuRun(paramN, phi, 20)
