@@ -156,10 +156,14 @@ def compileAvgResults(startString='Avg_Res'):
 		print(content)
 		last_header_line = content.index('-----\n') + 1
 
-	for single_runfile in avg_run_files:
+	avg_run_results = np.genfromtxt(single_runfile[1], dtype=np.float64, delimiter=',',
+										skip_header=last_header_line, autostrip=True)
+
+	for single_runfile in avg_run_files[1:]:
 		single_run_arr = np.genfromtxt(single_runfile, dtype=np.float64, delimiter=',',
 										skip_header=last_header_line, autostrip=True)
 		print(single_run_arr)
+		avg_run_results = np.concatenate((avg_run_results, single_run_arr), axis=0)
 
 
 
