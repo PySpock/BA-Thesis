@@ -149,65 +149,38 @@ def flexArr(vals):
 def compileAvgResults(startString='Avg_Res'):
 	# This function collects the data from every average/meta-simulation run and collects
 	# it into one file. Standard deviation and error are calculated for the mean heat conduct.
-
 	avg_run_files = es.getFiles(startString)
 	with open(avg_run_files[0], 'r') as canary_file:
 		content = list(canary_file)
-		print(content)
 		last_header_line = content.index('-----\n') + 1
 
-	avg_run_results = np.genfromtxt(single_runfile[1], dtype=np.float64, delimiter=',',
-										skip_header=last_header_line, autostrip=True)
+	avg_run_results = np.expand_dims(np.genfromtxt(avg_run_files[0], dtype=np.float64, delimiter=',',
+									skip_header=last_header_line, autostrip=True), axis=0)
 
 	for single_runfile in avg_run_files[1:]:
 		single_run_arr = np.genfromtxt(single_runfile, dtype=np.float64, delimiter=',',
-										skip_header=last_header_line, autostrip=True)
-		print(single_run_arr)
-		avg_run_results = np.concatenate((avg_run_results, single_run_arr), axis=0)
+									   skip_header=last_header_line, autostrip=True)
 
+		avg_run_results = np.concatenate((avg_run_results, 
+										  np.expand_dims(single_run_arr, axis=0)), axis=0)
 
+	kMean = np.expand_dims(avg_run_results.mean(axis=0)[0], axis=0)
+	kSdev = np.expand_dims(avg_run_results.std(axis=0)[0], axis=0)
+	kSerr = kSdev / np.sqrt(len(avg_run_files))
+	compiled_results = np.concatenate((kMean, kSdev, kSerr, avg_run_results[1, 1:, :]))
 
-	"""
-	avg_result_files = es.getFiles(startString)
-	avg_runs = len(avg_result_files)
-	avg_results = []
-	keys = []
-	for filename in avg_result_files:
-		# Open average_res file and seperate it into keys and vals
-		# no try-block since getFiles assures existence of files
-		curr_file = open(result_file, 'r')
-		lines_raw = list(curr_file)
-		lines = [line.strip() for line in lines_raw]
-		split_index = lines.index('-----')
-		keys = lines[:split_index]
-		vals_str = lines[split_index + 1:]
-		vals = [entry.split(',') for entry in vals_str]
-		float_vals = [[float(str_val) for str_val in sublist] for sublist in vals]
-		avg_results.append(float_vals)
-		print(filename)
-		print(avg_results)
-	# 3D array with index scheme: axis0 -> report parameter/key | axis1 -> stagerun
-	# axis2 -> averaging run
-	result_array = np.stack(tuple(avg_results), axis=2)
-	#print(result_array)
-	kMean = np.expand_dims(result_array.mean(axis=2)[0], axis=0)
-	kSdev = np.expand_dims(result_array.std(axis=2)[0], axis=0)
-	kSerr = np.expand_dims(kSdev / np.sqrt(avg_runs), axis=0)
-	print('resarr  ', result_array)
-	print('kmean', kMean)
-	avg_compilated_arr = np.concatenate((kMean, kSdev, kSerr, result_array[:, :, 0]))
-	additional_keys = ['Standard error', 'Standard deviation', 'Mean heat cond. of avg. runs']
-	cache = list(reversed(keys))
-	keys = list(reversed(cache + additional_keys))
-	keys = [''.join([str_item, '\n']) for str_item in keys]
-	np.savetxt('AverageEndresult.txt', avg_compilated_arr, delimiter=',', header=keys)
-	"""
+	key_list = ['kMean\n', 'kStDev\n', 'kStdErr\n'] + content[1:last_header_line-1] + ['-----']
+	keys = ''.join(key_list)
+
+	np.savetxt('CompiledResult.txt', compiled_results, newline='\n', delimiter=',',
+				header=keys, comments='')
+
 
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
-	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
+	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
+	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -242,7 +215,7 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 		print('Doing stage run ', stagenum, ' Simulating ', N, 'particles/inlays.')
 		while True:
 			try:
-				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=20)
+				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=15)
 			except subprocess.TimeoutExpired:
 				print(' ')
 				print('FlexPDE6n.exe timed out. Retrying current simulation ...')
@@ -262,11 +235,7 @@ def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
 		print('##########################################')
 		print(' ')
 		single_simuRun(N_arr, phi, delta, xL, yL)
-<<<<<<< HEAD
-		es.compileResults('Avg_Run_' + str(itr))
-=======
 		es.compileResults('Avg_Res_' + str(itr))
->>>>>>> ace6f3292e4ebdb76756d0c7f88d4e32c1b60e50
 	compileAvgResults()
 
 
@@ -292,5 +261,5 @@ y = sortPos(cpos)[1]
 
 # Parameter run:
 
-paramN = np.arange(1, 4, 1)
-average_simuRun(paramN, phi, 2)
+paramN = np.arange(1, 26, 1)
+average_simuRun(paramN, phi, 10)
