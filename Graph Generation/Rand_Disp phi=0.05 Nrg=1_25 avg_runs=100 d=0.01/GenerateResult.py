@@ -36,7 +36,7 @@ def getData(resultfile, delim='-----'):
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
-rfile = 'CompiledResult.txt'
+rfile = 'CompiledResult avg_runs=100.txt'
 
 keys, vals = getData(rfile)
 
@@ -48,7 +48,7 @@ keys, vals = getData(rfile)
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
-ax.set_xlim(0.5, 16)
+ax.set_xlim(0.5, 26)
 #ax.set_ylim(0.008, 0.065)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')

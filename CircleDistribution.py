@@ -64,7 +64,7 @@ def generateCircles(N, phi, delta=0.01, xL=1.0, yL=0.1):
 	intervX = xL - rad - delta
 	intervY = yL - rad - delta
 	ctr = 0
-	max_attempts = 25000
+	max_attempts = 5000000
 	circles = []
 	while len(circles) < N:
 		newX = rnd.uniform(-intervX,intervX)
@@ -179,8 +179,8 @@ def compileAvgResults(startString='Avg_Res'):
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Random WIP\\Rand_Disp WIP'
-	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
+	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.05 Nmax=50 copy'
+	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -217,7 +217,7 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 		timeouts = 0
 		while True:
 			try:
-				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=10)
+				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=25)
 			except subprocess.TimeoutExpired:
 				print(' ')
 				print('FlexPDE6n.exe timed out. Retrying current simulation ...')
@@ -232,6 +232,7 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 					update[2] = modpars[2] + flexArr(xPos)
 					update[3] = modpars[3] + flexArr(yPos)
 					updateDescriptor(update, descriptorname)
+					timeouts = 0
 				continue
 			else:
 				break
@@ -254,24 +255,20 @@ def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
 
 # Set simulation parameters # spheres = nC and volume fraction = phi
 
-nC = 1
-phi = 0.05
+nC = 50
+phi = 0.20
 
-fail_chk, cpos = generateCircles(nC, phi)
-x = sortPos(cpos)[0]
-y = sortPos(cpos)[1]
+#fail_chk, cpos = generateCircles(nC, phi, delta=0.01)
+#x = sortPos(cpos)[0]
+#y = sortPos(cpos)[1]
 #print(sortPos(cpos))
 
 # Plot to control results:
 
 #ctrlPlot(x,y,nC,phi)
 
-# Test run loop to check the success rate of the circle generation
-# with the specified parameters:
-
-#testSucc(nC, phi)
 
 # Parameter run:
 
-paramN = np.arange(1, 16, 1)
-average_simuRun(paramN, phi, 20)
+paramN = np.arange(5, 51, 1)
+average_simuRun(paramN, phi, avg_runs=100, delta=0.0005)
