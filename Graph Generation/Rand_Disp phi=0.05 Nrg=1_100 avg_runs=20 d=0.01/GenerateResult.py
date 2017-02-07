@@ -33,6 +33,10 @@ def getData(resultfile, delim='-----'):
 	key_data, val_data = separateKeysVals(file_lines, delim)
 	return key_data, val_data
 
+def plotmodels(kInlay, kMatrix, phi):
+	for key, funcparam in am.funcPack_maxwellbased().items():
+		ax.axhline(funcparam[0](kInlay, kMatrix, phi), label=key, color=funcparam[1][0], ls=funcparam[1][1:])
+
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
@@ -58,8 +62,10 @@ ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1
 ax.errorbar(bvals[5], bvals[0], yerr=bvals[1], fmt='ro', label='Simulationswert $\lambda(N)$')
 #ax.errorbar(svals[5], svals[0], yerr=svals[1], fmt='bo', label='Simulationswert $\lambda(N)$')
 
+plotmodels(1,0.01,0.05)
+
 ax.legend(loc=1)
 
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.pdf')
+fig.savefig('Rand_Disp phi=0.05 Nrg=1_100 avg=20 d=0.01.pdf')
 #fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
 plt.show()

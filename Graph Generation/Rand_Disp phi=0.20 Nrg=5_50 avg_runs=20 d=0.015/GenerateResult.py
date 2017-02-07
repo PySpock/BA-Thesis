@@ -33,6 +33,11 @@ def getData(resultfile, delim='-----'):
 	key_data, val_data = separateKeysVals(file_lines, delim)
 	return key_data, val_data
 
+def plotmodels(kInlay, kMatrix, phi):
+	for key, funcparam in am.funcPack_maxwellbased().items():
+		ax.axhline(funcparam[0](kInlay, kMatrix, phi), label=key, color=funcparam[1][0],
+				   ls=funcparam[1][1:])
+
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
@@ -64,8 +69,10 @@ ax.errorbar(mvals[5], mvals[0], yerr=mvals[1], fmt='bo', label='Simulationswert 
 ax.errorbar(fvals[5], fvals[0], yerr=fvals[1], fmt='go', label='Simulationswert $\lambda(N) \quad d=0.01$')
 ax.errorbar(fevals[5], fevals[0], yerr=fevals[1], fmt='yo', label='Simulationswert $\lambda(N) \quad d=0.015$')
 
+plotmodels(1,0.01,0.2)
+
 ax.legend(loc=1)
 
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.pdf')
+fig.savefig('Rand_Disp phi=0.2 Nrg=5_50 avg=20 d=0.015.pdf')
 #fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
 plt.show()

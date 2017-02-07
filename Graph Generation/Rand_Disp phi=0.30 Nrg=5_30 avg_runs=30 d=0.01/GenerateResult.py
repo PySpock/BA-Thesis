@@ -33,7 +33,6 @@ def getData(resultfile, delim='-----'):
 	key_data, val_data = separateKeysVals(file_lines, delim)
 	return key_data, val_data
 
-
 def plotmodels(kInlay, kMatrix, phi):
 	for key, funcparam in am.funcPack_maxwellbased().items():
 		ax.axhline(funcparam[0](kInlay, kMatrix, phi), label=key, color=funcparam[1][0], ls=funcparam[1][1:])
@@ -42,33 +41,28 @@ def plotmodels(kInlay, kMatrix, phi):
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
-rfile_ar100 = 'CompiledResult d=0.0005 ar=100.txt'
-rfile_ar20 = 'CompiledResult d=0.0005 ar=20.txt'
+rfile = 'CompiledResult.txt'
 
-hkeys, hvals = getData(rfile_ar100)
-tkeys, tvals = getData(rfile_ar20)
+keys, vals = getData(rfile)
 
 # Code, e.g. plotting
 
-#print(fkeys)
-#print(fvals)
+#print(keys)
+#print(vals)
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
-ax.set_xlim(4, 51)
+ax.set_xlim(4, 31)
 #ax.set_ylim(0.008, 0.065)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
-ax.errorbar(hvals[5], hvals[0], yerr=hvals[1], fmt='ro', label='Simulationswert $\lambda(N) \quad d=0.0005 \, ar=100$')
-ax.errorbar(tvals[5], tvals[0], yerr=tvals[1], fmt='go', label='Simulationswert $\lambda(N) \quad d=0.0005 \, ar=20$')
-
-plotmodels(1,0.01,0.2)
-
+ax.errorbar(vals[5], vals[0], yerr=vals[1], fmt='ro', label='Simulationswert $\lambda$(N)')
+plotmodels(1,0.01,0.3)
 
 ax.legend(loc=1)
 
-fig.savefig('Rand_Disp phi=0.2 Nrg=5_50 avg=100 d=0.0005.pdf')
+fig.savefig('Rand_Disp phi=0.3 Nrg=5_30 avg=30 d=0.01.pdf')
 #fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
 plt.show()

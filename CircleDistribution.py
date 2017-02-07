@@ -64,7 +64,7 @@ def generateCircles(N, phi, delta=0.01, xL=1.0, yL=0.1):
 	intervX = xL - rad - delta
 	intervY = yL - rad - delta
 	ctr = 0
-	max_attempts = 5000000
+	max_attempts = 1000000
 	circles = []
 	while len(circles) < N:
 		newX = rnd.uniform(-intervX,intervX)
@@ -179,8 +179,8 @@ def compileAvgResults(startString='Avg_Res'):
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.05 Nmax=50 copy'
-	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
+	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.05 Nmax=50 copy'
+	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -197,10 +197,22 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 		fail_flag, raw_pos = generateCircles(N, phi, delta, xL, yL)
 		stagenum = stagenum + 1
 		if fail_flag:
-			print('Skipping simulation run ', stagenum, ' due to error during particle generation.')
-			print('Possible error #1: Particle radius bigger than matrix dimension')
-			print('Possible error #2: Failed to find valid positions for ', N, ' particles')
-			continue
+			scratch_retries = 0
+			while scratch_retries < 5:
+				scratch_retries += 1
+				print(' ')
+				print('Retrying circle generation from scratch by erasing preexisting')
+				print('circle positions! Retry: ', scratch_retries)
+				print(' ')
+				fail_flag, raw_pos = generateCircles(N, phi, delta, xL, yL)
+				if not fail_flag:
+					print('Success at regenerating positions!')
+					break
+				elif scratch_retries >= 5:
+					print('Skipping simulation run ', stagenum, ' due to error during particle generation.')
+					print('Possible error #1: Particle radius bigger than matrix dimension')
+					print('Possible error #2: Failed to find valid positions for ', N, ' particles')
+					continue
 		xPos = sortPos(raw_pos)[0]
 		yPos = sortPos(raw_pos)[1]
 		# Generate list of lines which are updated
@@ -255,8 +267,8 @@ def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
 
 # Set simulation parameters # spheres = nC and volume fraction = phi
 
-nC = 50
-phi = 0.20
+nC = 10
+phi = 0.3
 
 #fail_chk, cpos = generateCircles(nC, phi, delta=0.01)
 #x = sortPos(cpos)[0]
@@ -270,5 +282,10 @@ phi = 0.20
 
 # Parameter run:
 
+<<<<<<< HEAD
 paramN = np.arange(5, 41, 1)
 average_simuRun(paramN, phi, avg_runs=500, delta=0.0005)
+=======
+paramN = np.arange(5, 31, 1)
+average_simuRun(paramN, phi, avg_runs=30, delta=0.01)
+>>>>>>> cb0022bc673b6189938350df05de963c57323d9c

@@ -137,10 +137,4 @@ def funcPack_lewisniels():
 				'Random close spherical Lewis Nielsen' : [randomcloseLewisNielsen, 'm-'],
 				'Random loose spherical Lewis Nielsen' : [randomlooseLewisNielsen, 'c-']}
 	return package
-	
-print('phi=0.25')
-for key, funcpars in funcPack_maxwellbased().items():
-	print(key, ': ', funcpars[0](1,0.01,0.25))
 
-for key, funcpars in funcPack_lewisniels().items():
-	print(key, ': ', funcpars[0](1,0.01,0.25))
