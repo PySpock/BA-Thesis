@@ -282,10 +282,5 @@ phi = 0.3
 
 # Parameter run:
 
-<<<<<<< HEAD
-paramN = np.arange(5, 41, 1)
-average_simuRun(paramN, phi, avg_runs=500, delta=0.0005)
-=======
 paramN = np.arange(5, 31, 1)
 average_simuRun(paramN, phi, avg_runs=30, delta=0.01)
->>>>>>> cb0022bc673b6189938350df05de963c57323d9c
