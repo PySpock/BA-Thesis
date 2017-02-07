@@ -58,7 +58,7 @@ ax.set_xlabel('Anzahl der Inhomogenitäten N')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
 ax.errorbar(cvals[5], cvals[0], yerr=cvals[1], fmt='ro', label='Simulationswert $\lambda(N) \quad d=0.001$ close')
-ax.errorbar(mvals[5], mvals[0], yerr=mvals[1], fmt='bo', label='Simulationswert $\lambda(N) \quad d=0.001$ med')
+ax.errorbar(mvals[5], mvals[0], yerr=mvals[1], fmt='bo', label='Simulationswert $\lambda(N) \quad d=0.005$ med')
 ax.errorbar(fvals[5], fvals[0], yerr=fvals[1], fmt='go', label='Simulationswert $\lambda(N) \quad d=0.01$ far')
 
 ax.legend(loc=1)
