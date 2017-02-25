@@ -41,6 +41,8 @@ def plotmodels(kInlay, kMatrix, phi):
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
+title = 'Rand_Disp phi=0.2 Nrg=5_50 avg=20 d=0.015'
+
 rfile_close = 'CompiledResult d0001.txt'
 rfile_med = 'CompiledResult d0005.txt'
 rfile_far = 'CompiledResult d001.txt'
@@ -59,6 +61,8 @@ fekeys, fevals = getData(rfile_efar)
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
+ax.set_title(title)
+
 ax.set_xlim(4, 51)
 #ax.set_ylim(0.008, 0.065)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
@@ -73,6 +77,6 @@ plotmodels(1,0.01,0.2)
 
 ax.legend(loc=1)
 
-fig.savefig('Rand_Disp phi=0.2 Nrg=5_50 avg=20 d=0.015.pdf')
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
+fig.savefig(title + '.pdf')
+#fig.savefig(title + '.png', dpi=800)
 plt.show()
