@@ -64,7 +64,7 @@ def generateCircles(N, phi, delta=0.01, xL=1.0, yL=0.1):
 	intervX = xL - rad - delta
 	intervY = yL - rad - delta
 	ctr = 0
-	max_attempts = 1000000
+	max_attempts = 100000
 	circles = []
 	while len(circles) < N:
 		newX = rnd.uniform(-intervX,intervX)
@@ -179,8 +179,9 @@ def compileAvgResults(startString='Avg_Res'):
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
+	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.3 Nrg=5_50 avg=300 d=0.005 NGRID=100'
 	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.05 Nmax=50 copy'
-	descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
+	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
 	try:
 		os.chdir(descriptorpath)
@@ -198,7 +199,7 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 		stagenum = stagenum + 1
 		if fail_flag:
 			scratch_retries = 0
-			while scratch_retries < 5:
+			while scratch_retries < 10:
 				scratch_retries += 1
 				print(' ')
 				print('Retrying circle generation from scratch by erasing preexisting')
@@ -207,8 +208,9 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 				fail_flag, raw_pos = generateCircles(N, phi, delta, xL, yL)
 				if not fail_flag:
 					print('Success at regenerating positions!')
+					print(' ')
 					break
-				elif scratch_retries >= 5:
+				elif scratch_retries >= 10:
 					print('Skipping simulation run ', stagenum, ' due to error during particle generation.')
 					print('Possible error #1: Particle radius bigger than matrix dimension')
 					print('Possible error #2: Failed to find valid positions for ', N, ' particles')
@@ -267,7 +269,7 @@ def average_simuRun(N_arr, phi, avg_runs, delta=0.01, xL=1.0, yL=0.1):
 
 # Set simulation parameters # spheres = nC and volume fraction = phi
 
-nC = 10
+nC = 100
 phi = 0.3
 
 #fail_chk, cpos = generateCircles(nC, phi, delta=0.01)
@@ -282,5 +284,5 @@ phi = 0.3
 
 # Parameter run:
 
-paramN = np.arange(5, 31, 1)
-average_simuRun(paramN, phi, avg_runs=30, delta=0.01)
+paramN = np.arange(5, 51, 1)
+average_simuRun(paramN, phi, avg_runs=300, delta=0.005)

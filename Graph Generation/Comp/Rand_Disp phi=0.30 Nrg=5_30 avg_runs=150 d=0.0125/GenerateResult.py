@@ -58,11 +58,11 @@ ax.set_xlim(4, 31)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
-ax.errorbar(vals[5], vals[0], yerr=vals[1], fmt='ro', label='Simulationswert $\lambda(N)$')
+ax.errorbar(vals[5], vals[0], yerr=vals[1], fmt='ro', label='Simulationswert $\lambda$(N)')
 plotmodels(1,0.01,0.3)
 
 ax.legend(loc=1)
 
-fig.savefig('Rand_Disp phi=0.3 Nrg=5_30 avg=30 d=0.01.pdf')
+fig.savefig('Rand_Disp phi=0.3 Nrg=5_30 avg=150 d=0.0125.pdf')
 #fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
 plt.show()

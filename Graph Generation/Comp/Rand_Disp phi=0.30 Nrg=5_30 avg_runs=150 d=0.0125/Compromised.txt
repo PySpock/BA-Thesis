@@ -1,0 +1,3 @@
+Only TRUE PDF has correct result!
+
+Must regenerate data as data loss occurred!
