@@ -43,6 +43,7 @@ def plotmodels(kInlay, kMatrix, phi):
 # Specify (path and) name as "hardcoded variables"
 
 rfile = 'CompiledResult.txt'
+title = 'Rand_Disp phi=0.25 Nrg=5_50 avg=20 d=0.01'
 
 keys, vals = getData(rfile)
 
@@ -53,6 +54,8 @@ keys, vals = getData(rfile)
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
+
+ax.set_title(title)
 
 ax.set_xlim(4, 51)
 #ax.set_ylim(0.008, 0.065)
@@ -65,6 +68,6 @@ plotmodels(1,0.01,0.25)
 
 ax.legend(loc=1)
 
-fig.savefig('Rand_Disp phi=0.25 Nrg=5_50 avg=20 d=0.01.pdf')
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
+fig.savefig(title + '.pdf')
+#fig.savefig(title + '.png', dpi=800)
 plt.show()

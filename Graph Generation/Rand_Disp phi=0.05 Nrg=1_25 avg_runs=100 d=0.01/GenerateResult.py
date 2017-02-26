@@ -36,6 +36,7 @@ def getData(resultfile, delim='-----'):
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
+title = 'Rand_Disp Nrg=1_25 avg=100 d=0.01'
 rfile = 'CompiledResult avg_runs=100.txt'
 
 keys, vals = getData(rfile)
@@ -48,6 +49,8 @@ keys, vals = getData(rfile)
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
+ax.set_title(title)
+
 ax.set_xlim(0.5, 26)
 #ax.set_ylim(0.008, 0.065)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
@@ -57,6 +60,6 @@ ax.errorbar(vals[5], vals[0], yerr=vals[1], fmt='ro', label='Simulationswert $\l
 
 ax.legend(loc=1)
 
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.pdf')
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
+fig.savefig(title + '.pdf')
+#fig.savefig(title + '.png', dpi=800)
 plt.show()

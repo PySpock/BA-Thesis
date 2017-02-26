@@ -12,7 +12,7 @@ ax = fig.add_subplot(1,1,1)
 
 #ax.set_xlim(0.008, 0.385)
 #ax.set_ylim(0.008, 0.065)
-ax.set_xlabel('Volume fraction $\phi$')
+ax.set_xlabel('Volumenanteil $\phi$')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
 for mwkey, mwmodparam in am.funcPack_maxwellbased().items():
@@ -25,6 +25,6 @@ for lnkey, lnmodparam in am.funcPack_lewisniels().items():
 ax.legend(loc=2)
 
 
-fig.savefig('Model Comp.pdf')
-fig.savefig('Model Comp.png', dpi=800)
+fig.savefig('Model_Comp.pdf')
+fig.savefig('Model_Comp.png', dpi=800)
 plt.show()

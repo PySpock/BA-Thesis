@@ -42,6 +42,8 @@ def plotmodels(kInlay, kMatrix, phi):
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
+title = 'Rand_Disp phi=0.2 Nrg=5_50 avg=100 d=0.0005'
+
 rfile_ar100 = 'CompiledResult d=0.0005 ar=100.txt'
 rfile_ar20 = 'CompiledResult d=0.0005 ar=20.txt'
 
@@ -56,19 +58,21 @@ tkeys, tvals = getData(rfile_ar20)
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
+ax.set_title(title)
+
 ax.set_xlim(4, 51)
 #ax.set_ylim(0.008, 0.065)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
-ax.errorbar(hvals[5], hvals[0], yerr=hvals[1], fmt='ro', label='Simulationswert $\lambda(N) \quad d=0.0005 \, ar=100$')
-ax.errorbar(tvals[5], tvals[0], yerr=tvals[1], fmt='go', label='Simulationswert $\lambda(N) \quad d=0.0005 \, ar=20$')
+ax.errorbar(hvals[5], hvals[0], yerr=hvals[1], fmt='ro', label='Simulationswert $\lambda(N) \quad d=0.0005 \,, avg=100$')
+ax.errorbar(tvals[5], tvals[0], yerr=tvals[1], fmt='go', label='Simulationswert $\lambda(N) \quad d=0.0005 \,, avg=20$')
 
 plotmodels(1,0.01,0.2)
 
 
 ax.legend(loc=1)
 
-fig.savefig('Rand_Disp phi=0.2 Nrg=5_50 avg=100 d=0.0005.pdf')
+fig.savefig(title + '.pdf')
 #fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
 plt.show()
