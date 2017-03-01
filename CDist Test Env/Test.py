@@ -3,32 +3,28 @@ class Error(Exception):
 
 class GenError(Exception):
 	"""aszdgudzfg"""
-	def __init__(self,message,a,b):
+	def __init__(self, message, a, b):
 		self.a = a
 		self.message = message
 		self.b = b
 
-class testc():
-	i = 1
-	pass
 
 
-def hilo(a,b):
+def bigger(a,b):
 	if a>b:
-		raise GenError('fies',1,3)
+		raise GenError('fies', a, b)
 	else:
 		print('nais')
 
 
 print('lol')
-a = testc()
-a.x = 10
+print('')
 
 f=2
 g=1
 
 try:
-	hilo(f,g)
+	bigger(f,g)
 except GenError as ge:
 	print('ready')
-	print(ge.a)
+	print(ge.message, ge.a, ge.b)

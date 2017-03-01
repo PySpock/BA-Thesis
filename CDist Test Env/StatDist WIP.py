@@ -27,15 +27,13 @@ class MeshCollisionError(InlayGenerationError):
 
 class GenerationAttemptsExceeded(InlayGenerationError):
 	"""Exeption for failure of circle generation within the defined max_attempts
-	   limits by the brute-force algorithm. This happens if the maximum packing
-	   is reached or the algorithm generated the first inlay positions in such a
-	   lavish manner that no more inlays fit in"""
-
+	   limits. This happens if the maximum packing is reached or the algorithm generated
+	   the first inlay positions in such a lavish manner that no more inlays fit in"""
 	def __init__(self, Nmax, Ncurr, max_attempts, msg=None):
 		if msg is None:
 			self.msg = ' '.join(['Warning: Algorithm was unable to generate the requested',
 					   			 Nmax, 'inlays within', max_attempts, 'attempts.',
-								 Ncurr, 'inlays of the', Nmax, 'requested were generated!'])
+								 Ncurr, 'inlays of the', Nmax, 'requested  inlays were generated!'])
 		self.Nmax = Nmax
 		self.Ncurr = Ncurr
 		self.max_attempts = max_attempts
@@ -46,16 +44,19 @@ verbose = False
 # Be careful with verbosity setting. The console output gets quite big
 # for large numbers of particles/inlays/circles
 
+
+
+
 def dist(posA, posB):
-	# Calculate cartesian distance between two points
+	"""Calculates the distance of two points in a cartesian coordinate system"""
 	d = m.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2)
 	return d
 
 
 def radius(N, phi, xL=1.0, yL=0.1):
-	# Given the total number N, volume fraction phi and underlying
-	# mesh dimensions xL and yL, this function calculates the radius
-	# of a single inlay
+	"""	Given the total number of inlays N, volume fraction phi and underlying
+	mesh dimensions xL and yL, this function calculates the radius
+	of a single inlay"""
 	r = np.power((4 * xL * yL * phi) / (np.pi * N), 0.5)
 	return r
 
@@ -66,16 +67,17 @@ def debug(string):
 
 
 def flexArr(vals):
-	# This function converts a Python list to a flexPDE-styled
-	# array of the form array(val1, val2, ..., valN)
+	""" Converts a Python list -> vals to a flexPDE-styled array of the form
+	array(val1, val2, ..., valN). Output as string so it can be written to the
+	descripto file"""
 	f_array = 'array(' + ','.join([str(val) for val in vals]) + ')'
 	return f_array
 
 
 def compatible(newpos, rad, ex_circles, delta=0.01):
-	# Check, wether the inlay specified by newpos-coordinates wit radius rad
-	# is compatible with all the other inlays in the lit ex_circles within
-	# the minimum distance margin delta
+	"""	Check wether the inlay specified by newpos-coordinates with radius rad
+	is compatible with all the other inlays in the list of existing inlays ex_circles
+	within the minimum distance margin delta"""
 	comp_OK = True
 	for cpos in ex_circles:
 		if dist(newpos,cpos) < 2 * rad + delta:
@@ -91,8 +93,20 @@ def compatible(newpos, rad, ex_circles, delta=0.01):
 
 
 def generateInlayPos(N, phi, delta=0.01, max_attempts=100000, xL=1.0, yL=0.1):
+	""" Brute force funtion to randomly distribute the inlays in the underlying 
+	matrix. Generates a random position within the mesh borders and then checks
+	for compatibility with the pre-existing inlay positions. If a violation is 
+	found, the position gets discarded and the generation restarts.
+	Keywords:
+				N 				number of inlays to distribute
+				phi				volume fraction of filler particles
+				delta			minimal distance margin between inlays 
+								and inlays and matrix border
+				max_attempts 	maximum number of attempts to find a
+								valid position for the i-th inlay
+				xLen 			matrix dimension x
+				yLen			matrix dimension y"""
 	rad = radius(N, phi, xL, yL)
-	fail_chk = False
 	if rad > yL - delta:
 		raise MeshCollisionError(rad, yL, delta)
 	intervX = xL - rad - delta
@@ -114,6 +128,16 @@ def generateInlayPos(N, phi, delta=0.01, max_attempts=100000, xL=1.0, yL=0.1):
 
 
 def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modifikation Ende}']):
+	""" Updates the flexPDE descriptor file with a passed list of strings. The lines between the 
+		separator markers (comments in flexPDE descriptor) are fully replaced with the contents
+		of the forwarded string list.
+		Keyword arguments:
+				update_lines			list of strings/lines which will be written between the 
+										separators in a pre-existing flexPDE descriptor file
+				filename				string of filename of flexPDE descriptor file to modify
+				sep 					list of two strings enclosing the lines in the descriptor
+										which will be overwritten. Default:
+										['{Modifikation Beginn}','{Modifikation Ende}'] """
 	# Open file in read-mode and update content in-place in memory
 	try:
 		file = open(filename, 'r')
@@ -129,7 +153,6 @@ def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modi
 		for newline in reversed(update_lines):
 			desc_lines.insert(l_index, newline)
 		file.close()
-
 	# Open file in write mode to overwrite with updated content from memory
 	try:
 		file = open(filename, 'w')
@@ -146,8 +169,9 @@ def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modi
 
 
 def compileAvgResults(startString='Avg_Res'):
-	# This function collects the data from every average/meta-simulation run and collects
-	# it into one file. Standard deviation and error are calculated for the mean heat conduct.
+	"""	This function collects the data from every average/meta-simulation run and compiles
+	it into one file. For the effective heat conductivity, it calculates the mean, standard
+	deviation and standard error over all averaging runs for every number of inlays separately"""
 	avg_run_files = es.getFiles(startString)
 	with open(avg_run_files[0], 'r') as canary_file:
 		content = list(canary_file)
