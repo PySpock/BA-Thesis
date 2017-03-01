@@ -62,12 +62,14 @@ ax.set_xlim(-2, 2)
 ax.set_xlabel('Abstand Inhomgenitäten $d$ in m ')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
-ax.plot(svals[3], svals[0], 'r+', label='Stat. Randbed.', markersize=8, markeredgewidth=1.25)
-ax.plot(pvals[3], pvals[0], 'gx', label='Period. Randbed.', markersize=8, markeredgewidth=1.0)
+ax.plot(svals[3], svals[0], 'r+', label='Stat. Randbedingungen', markersize=8, markeredgewidth=1.25)
+ax.plot(pvals[3], pvals[0], 'gx', label='Period. Randbedingungen', markersize=8, markeredgewidth=1.0)
 
-ax.legend(loc=2)
+ax.legend(loc=8)
 
-fig.savefig('N=2 near_coll per_statComp.eps')
 fig.savefig('N=2 near_coll per_statComp.pdf')
-fig.savefig('N=2 near_coll per_statComp.png', dpi=400)
+
+#fig.savefig('N=2 near_coll per_statComp.eps')
+#fig.savefig('N=2 near_coll per_statComp.png', dpi=400)
+
 plt.show()

@@ -80,7 +80,7 @@ ax = fig.add_subplot(1,1,1)
 
 ax.set_ylim(0.00975,0.0315)
 ax.set_xlim(0,0.21)
-ax.set_xlabel('Volume fraction $\phi$ ')
+ax.set_xlabel('Volumenanteil $\phi$ ')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
 ax.plot(sp_vals[1], sp_vals[0], 'ro', label='Kreisform')

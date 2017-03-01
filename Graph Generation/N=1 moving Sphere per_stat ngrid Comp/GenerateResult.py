@@ -63,9 +63,9 @@ for datafile_s, datafile_p in zip(rf_stat, rf_per):
 	per_vals.append(pvals)
 
 
-print(per_keys[0])
-print(stat_keys[0])
-print(stat_vals[0][0])
+#print(per_keys[0])
+#print(stat_keys[0])
+#print(stat_vals[0][0])
 
 
 # Code, e.g. plotting
@@ -76,18 +76,18 @@ for i, sv, pv, ngval in zip(itr, stat_vals, per_vals, ng_vals):
 	fig = plt.figure()
 	ax = fig.add_subplot(1,1,1)
 
-	#ax.set_ylim(0.012025, 0.012125)
+	ax.set_ylim(12.00, 12.125)
 	ax.set_xlim(-1, 1)
 	ax.set_xlabel('Position der Inhomgenität $x$ in m ')
 	ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{mW (m \cdot K)^{-1}}$')
 
-	ax.plot(stat_vals[i][2], 1000 * stat_vals[i][0], 'ro', label='kEff(x) stat. Randbed.')
-	ax.plot(per_vals[i][2], 1000 * per_vals[i][0], 'gs', label='kEff(x) period. Randbed.')
+	ax.plot(stat_vals[i][2], 1000 * stat_vals[i][0], 'ro', label='$\lambda_{\mathrm{eff}}(x)$ stat. Randbedingung')
+	ax.plot(per_vals[i][2], 1000 * per_vals[i][0], 'gs', label='$\lambda_{\mathrm{eff}}(x)$ period. Randbedingung')
 
 	configPlot(plotloc=8)
 
-	fig.savefig('N=1 movSphere per_stat Comp ngrid=' + str(ngval) + '.pdf')
-	fig.savefig('N=1 movSphere per_stat Comp ngrid=' + str(ngval) + '.png', dpi=800)
+	fig.savefig('N=1_movSphere_per_stat_Comp_ngrid=' + str(ngval) + '.pdf')
+	# fig.savefig('N=1 movSphere per_stat Comp ngrid=' + str(ngval) + '.png', dpi=800)
 	fig.clear()
 
 """

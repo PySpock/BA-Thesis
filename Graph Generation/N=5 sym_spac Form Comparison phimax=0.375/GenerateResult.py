@@ -65,7 +65,7 @@ ax = fig.add_subplot(1,1,1)
 
 ax.set_xlim(0.008, 0.385)
 ax.set_ylim(0.008, 0.065)
-ax.set_xlabel('Volume fraction $\phi$ ')
+ax.set_xlabel('Volumenanteil $\phi$ ')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
 
@@ -76,7 +76,9 @@ for modelname, modelprops in am.funcPack_maxwellbased().items():
 
 ax.legend(loc=2)
 
-fig.savefig('N=5 sym_spac FormComp phiM=0.375.eps')
+# fig.savefig('N=5 sym_spac FormComp phiM=0.375.eps')
+# fig.savefig('N=5 sym_spac FormComp phiM=0.375.png', dpi=400)
+
 fig.savefig('N=5 sym_spac FormComp phiM=0.375.pdf')
-fig.savefig('N=5 sym_spac FormComp phiM=0.375.png', dpi=400)
+
 plt.show()
