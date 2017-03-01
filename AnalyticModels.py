@@ -152,7 +152,7 @@ def funcPack_lewisniels():
 	package = {'Simple cubic lattice Lewis Nielsen' : [simplecubicLewisNielsen, 'y-'],
 				'Random close spherical Lewis Nielsen' : [randomcloseLewisNielsen, 'm-'],
 				'Random loose spherical Lewis Nielsen' : [randomlooseLewisNielsen, 'c-'],
-				'Cylindrical simple cubic Lewis Nielsen' : [cylCubicLewisNielsen, 'g-']
+				'Cylindrical simple cubic Lewis Nielsen' : [cylCubicLewisNielsen, 'g-'],
 				'Cylindrical random Lewis Nielsen' : [cylRandomLewisNielsen, 'r-']}
 	return package
 	
