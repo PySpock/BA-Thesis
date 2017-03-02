@@ -179,7 +179,7 @@ def compileAvgResults(startString='Avg_Res'):
 
 def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.3 Nrg=5_50 avg=300 d=0.005 NGRID=100'
+	descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.3 Nrg=5_30 avg=300 d=0.001 NGRID=200'
 	#descriptorpath = 'C:\\Users\\Jannik\\Desktop\\Summary\\Rand_Disp phi=0.05 Nmax=50 copy'
 	#descriptorpath = 'C:\\Users\\stebanij\\Desktop\\Rand_Disp phi=0.05 Nmax=50 copy'
 	descriptorname = 'Rand_Disp Sphere.pde'
@@ -284,5 +284,5 @@ phi = 0.3
 
 # Parameter run:
 
-paramN = np.arange(5, 51, 1)
-average_simuRun(paramN, phi, avg_runs=300, delta=0.005)
+paramN = np.arange(5, 31, 1)
+average_simuRun(paramN, phi, avg_runs=300, delta=0.001)
