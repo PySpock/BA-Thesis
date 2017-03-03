@@ -10,6 +10,7 @@ import logging
 import errors
 import csv
 
+
 def dist(posA, posB):
 	"""Calculates the distance of two points in a cartesian coordinate system"""
 	d = np.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2)
@@ -30,6 +31,12 @@ def flexArr(vals):
 	descripto file"""
 	f_array = 'array(' + ','.join([str(val) for val in vals]) + ')'
 	return f_array
+
+
+def sortPos(pos_list):
+	xPos = [pos[0] for pos in pos_list]
+	yPos = [pos[1] for pos in pos_list]
+	return [xPos, yPos]
 
 
 def compatible(newpos, rad, ex_circles, delta=0.01):
@@ -70,7 +77,7 @@ def generate_configuration(N, phi, delta=0.01, max_attempts=100000, xL=1.0, yL=0
 	intervY = yL - rad - delta
 	ctr = 0
 	configuration = []
-	while len(circles) < N:
+	while len(configuration) < N:
 		newX = rnd.uniform(-intervX,intervX)
 		newY = rnd.uniform(-intervY,intervY)
 		if compatible([newX,newY], rad, configuration, delta):
@@ -90,7 +97,6 @@ def dump_config_tofile(confnum, config):
 	y_row = [coord[1] for coord in config]
 	with open(filename, 'w', newline='') as confile:
 		confwriter = csv.writer(confile, delimiter=',')
-		print(x_row)
 		confwriter.writerow(x_row)
 		confwriter.writerow(y_row)
 
@@ -141,10 +147,12 @@ def single_run(descriptorpath, descriptorname, N_arr, phi, delta=0.01, xL=1.0, y
 	max_scratch_retries = 10
 	
 	for N in N_arr:
+		stagenum += 1
 		scratch_retries = 0
 		while scratch_retries < max_scratch_retries:
 			try:
-				raw_pos = generate_configuration(N, phi, delta, xL, yL)
+				raw_pos = generate_configuration(N, phi, delta, max_attempts=100000, xL=1.0, yL=0.1)
+				break
 			except errors.MeshCollisionError as mesherr:
 				logging.error(mesherr.msg)
 				continue
@@ -173,7 +181,7 @@ def single_run(descriptorpath, descriptorname, N_arr, phi, delta=0.01, xL=1.0, y
 			continue
 
 		# Run simulation for current iteration in flexPDE
-		logging.info('Doing stage run ', stagenum, ' Simulating ', N, 'particles/inlays.')
+		logging.info('Doing stage run ' + str(stagenum) + ' Simulating ' + str(N) + 'particles/inlays.')
 		max_timeouts = 10
 		timeouts = 0
 		timeout_time = 25
@@ -186,7 +194,7 @@ def single_run(descriptorpath, descriptorname, N_arr, phi, delta=0.01, xL=1.0, y
 				if timeouts >= max_timeouts:
 					logging.warning('Maximum timeout threshold of '+ str(max_timeouts) + ' reached'
 									+ 'Re-generating current geometry and restarting.')
-					raw_pos = generate_configuration(N, phi, delta, xL, yL)
+					raw_pos = generate_configuration(N, phi, delta, max_attempts=100000, xL=1.0, yL=0.1)
 					xPos = sortPos(raw_pos)[0]
 					yPos = sortPos(raw_pos)[1]
 					update[2] = modpars[2] + flexArr(xPos)
@@ -197,7 +205,7 @@ def single_run(descriptorpath, descriptorname, N_arr, phi, delta=0.01, xL=1.0, y
 			else:
 				dump_config_tofile(stagenum, raw_pos)
 				break
-		logging.info('Finished single simulation run!')
+	logging.info('Finished single simulation run!')
 
 
 def move_files(startstrings, src, dest):
@@ -205,7 +213,7 @@ def move_files(startstrings, src, dest):
 	movfiles = []
 	for startstring in startstrings:
 		for item in dirlist:
-			if item[0:9] == startstring:
+			if item[0:len(startstring)] == startstring:
 				movfiles.append(item)
 
 	f_src = ['\\'.join([src, movfile]) for movfile in movfiles ]
@@ -217,10 +225,16 @@ def move_files(startstrings, src, dest):
 def create_folders(avg_runs):
 	procpath = os.getcwd()
 	datapath = '\\'.join([procpath, 'data'])
-	os.mkdir(datapath)
+	try:
+		os.mkdir(datapath)
+	except FileExistsError:
+		pass
 	for i in range(1, avg_runs + 1):
 		runpath = '\\'.join([datapath, 'run' + str(i)])
-		os.mkdir(runpath)
+		try:
+			os.mkdir(runpath)
+		except FileExistsError:
+			pass
 
 
 class SimulationProcess(mp.Process):
@@ -235,10 +249,21 @@ class SimulationProcess(mp.Process):
 	def run(self):
 		create_folders(self.avg_runs)
 		src = self.descriptorpath
-		for run in range(1, avg_runs + 1):
+		for run in range(1, self.avg_runs + 1):
 			dest = '\\'.join([src, 'data', 'run' + str(run)])
 			single_run(self.descriptorpath, self.descriptorname, self.Narr, self.phi,
 						self.delta)
-			move_files(['Sim_Info_', 'Config_info_'], src, dest)
+			move_files(['Sim_Info_', 'Config_Info_'], src, dest)
 		
 
+path = 'C:\\Users\\Jannik\\Desktop\\Rand Disp\\Rand_Disp WIP'
+name = 'Rand_Disp Sphere.pde'
+
+os.chdir(path)
+print(os.getcwd())
+input()
+
+logging.basicConfig(level=logging.INFO)
+
+s1 = SimulationProcess(path, name, 5, [1,2,3,4,5], 0.05, 0.01)
+s1.run()
