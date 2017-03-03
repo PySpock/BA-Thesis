@@ -1,0 +1,20 @@
+#####################################################################################
+# flexPDE Simulation Configurator
+#
+# Please fill in the desired simulation parameters directly
+# after the equal signs and save the file.
+#
+# Nmin - minimal number of inlays (conditions: natural number)
+# Nmax - upper number of inlays (conditions: natural number and Nmin < Nmax)
+# dN - stepsize of inlay number (condition: natural number)
+# phi - volume fraction of filler particles (condition: float 0 < phi < 1)
+# delta - distance betw. inlays and inlays/matrix (condition: float & reasonable)
+#
+#####################################################################################
+#####################################################################################
+#####################################################################################
+Nmin=1
+Nmax=2
+dN=3
+phi=4
+delta=5

@@ -139,9 +139,9 @@ def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modi
 		file.close()
 
 
-def single_run(descriptorpath, descriptorname, N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
+def single_run(descriptorpath, descriptorname, startstage, N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	stagenum = 0
+	stagenum = startstage
 	modpars = ['stagenum = ','number = ','xOff = ','yOff = ','volFrac=']
 	update = [0 for param in modpars]
 	max_scratch_retries = 10
@@ -238,9 +238,10 @@ def create_folders(avg_runs):
 
 
 class SimulationProcess(mp.Process):
-	def __init__(self, descriptorpath, descriptorname, avg_runs, Narr, phi, delta):
+	def __init__(self, descriptorpath, descriptorname, startstage, avg_runs, Narr, phi, delta):
 		self.descriptorpath = descriptorpath
 		self.descriptorname = descriptorname
+		self.startstage = startstage
 		self.Narr = Narr
 		self.avg_runs = avg_runs
 		self.phi = phi
@@ -251,8 +252,8 @@ class SimulationProcess(mp.Process):
 		src = self.descriptorpath
 		for run in range(1, self.avg_runs + 1):
 			dest = '\\'.join([src, 'data', 'run' + str(run)])
-			single_run(self.descriptorpath, self.descriptorname, self.Narr, self.phi,
-						self.delta)
+			single_run(self.descriptorpath, self.descriptorname, self.startstage, self.Narr,
+						self.phi, self.delta)
 			move_files(['Sim_Info_', 'Config_Info_'], src, dest)
 		
 
