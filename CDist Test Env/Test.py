@@ -1,8 +1,10 @@
 import os 
 import subprocess
-import threading as th
+import multiprocessing as mp
 import time
 from tqdm import tqdm
+import logging
+import errors
 
 def printfile(fname='test.txt'):
 	with open(fname, 'r') as f:
@@ -10,16 +12,27 @@ def printfile(fname='test.txt'):
 		for item in content:
 			print(item.strip())
 
+"""
 cache = ['line1\n', 'line2\n', 'line3\n']
 with open('test.txt', 'w') as newfile:
 	for line in cache:
 		newfile.write(line)
 
-"""print('please modify accordingly and save:')
+print('please modify accordingly and save:')
 subprocess.run(['notepad.exe', 'test.txt'])
 printfile()
 input()
 """
+class asdf:
+	pass
+
+def ladd(lista, listb):
+	result = []
+	for a, b in zip(lista, listb):
+		result.append(a + b)
+		logging.debug('Intermediate result:  ' + str(a + b))
+		time.sleep(0.05)
+	return result
 
 
 
@@ -32,16 +45,22 @@ def writefiles(flist=['1.txt', '2.txt', '3.txt', '4.txt', '5.txt']):
 		time.sleep(1)
 
 
+def pi(s):
+	print(s)
+	time.sleep(0.25)
 
-newthread = th.Thread(target=writefiles, name='umpalumpa')
-#newthread.start()
+class simproc(mp.Process):
 
-from tqdm import trange
+	def __init__(self, tms, char='n'):
+		self.tms = tms
+		self.char = char
+
+	def run(self):
+		for n in range(self.tms):
+			pi(self.char)
 
 
-for i in trange(10, desc='1st loop'):
-    for j in trange(5, desc='2nd loop', leave=False):
-        for k in trange(100, desc='3nd loop'):
-            time.sleep(0.01)
-
-print(newthread.name)
+s1 = simproc(5, char='n')
+s2 = simproc(5, char='k')
+s1.run()
+s2.run()

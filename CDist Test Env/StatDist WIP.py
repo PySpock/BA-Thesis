@@ -92,7 +92,7 @@ def compatible(newpos, rad, ex_circles, delta=0.01):
 	return comp_OK
 
 
-def generateInlayPos(N, phi, delta=0.01, max_attempts=100000, xL=1.0, yL=0.1):
+def generate_configuration(N, phi, delta=0.01, max_attempts=100000, xL=1.0, yL=0.1):
 	""" Brute force funtion to randomly distribute the inlays in the underlying 
 	matrix. Generates a random position within the mesh borders and then checks
 	for compatibility with the pre-existing inlay positions. If a violation is 
@@ -217,7 +217,7 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	update = [0 for param in modpars]
 	
 	for N in N_arr:
-		fail_flag, raw_pos = generateCircles(N, phi, delta, xL, yL)
+		fail_flag, raw_pos = generate_configuration(N, phi, delta, xL, yL)
 		stagenum = stagenum + 1
 		if fail_flag:
 			scratch_retries = 0
@@ -227,7 +227,7 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 				print('Retrying circle generation from scratch by erasing preexisting')
 				print('circle positions! Retry: ', scratch_retries)
 				print(' ')
-				fail_flag, raw_pos = generateCircles(N, phi, delta, xL, yL)
+				fail_flag, raw_pos = generate_configuration(N, phi, delta, xL, yL)
 				if not fail_flag:
 					print('Success at regenerating positions!')
 					break
@@ -261,7 +261,7 @@ def single_simuRun(N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 				if timeouts >= max_timeouts:
 					print('Maximum timeout threshold of ', max_timeouts, ' reached.')
 					print('Re-generating current geometry and restarting ...')
-					__, raw_pos = generateCircles(N, phi, delta, xL, yL)
+					__, raw_pos = generate_configuration(N, phi, delta, xL, yL)
 					xPos = sortPos(raw_pos)[0]
 					yPos = sortPos(raw_pos)[1]
 					update[2] = modpars[2] + flexArr(xPos)
