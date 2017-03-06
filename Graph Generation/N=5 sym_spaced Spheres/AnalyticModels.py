@@ -98,6 +98,22 @@ def randomlooseLewisNielsen(kInlay, kMatrix, inlayVolFrac):
 	kEff = kMatrix * (1 + shapePar * b * inlayVolFrac) / (1 - b * psi * inlayVolFrac)
 	return kEff
 
+def cylCubicLewisNielsen(kInlay, kMatrix, inlayVolFrac):
+	shapePar = 1.5 # Shape Parameter of inlay (here spherical) as required by model
+	phiM = 0.785 # Cylindrical simple cubic maximum packaging fraction 
+	b = (kInlay / kMatrix - 1) / (kInlay / kMatrix + shapePar)
+	psi = 1 + ((1 - phiM) / np.power(phiM, 2)) * inlayVolFrac
+	kEff = kMatrix * (1 + shapePar * b * inlayVolFrac) / (1 - b * psi * inlayVolFrac)
+	return kEff
+
+def cylRandomLewisNielsen(kInlay, kMatrix, inlayVolFrac):
+	shapePar = 1.5 # Shape Parameter of inlay (here spherical) as required by model
+	phiM = 0.820 # Cylindrical random uniaxial maximum packaging fraction 
+	b = (kInlay / kMatrix - 1) / (kInlay / kMatrix + shapePar)
+	psi = 1 + ((1 - phiM) / np.power(phiM, 2)) * inlayVolFrac
+	kEff = kMatrix * (1 + shapePar * b * inlayVolFrac) / (1 - b * psi * inlayVolFrac)
+	return kEff
+
 
 # Higher order analytical model from "Argentinian" paper
 
@@ -135,6 +151,8 @@ def funcPack_hasseljohn():
 def funcPack_lewisniels():
 	package = {'Simple cubic lattice Lewis Nielsen' : [simplecubicLewisNielsen, 'y-'],
 				'Random close spherical Lewis Nielsen' : [randomcloseLewisNielsen, 'm-'],
-				'Random loose spherical Lewis Nielsen' : [randomlooseLewisNielsen, 'c-']}
+				'Random loose spherical Lewis Nielsen' : [randomlooseLewisNielsen, 'c-'],
+				'Cylindrical simple cubic Lewis Nielsen' : [cylCubicLewisNielsen, 'g-'],
+				'Cylindrical random Lewis Nielsen' : [cylRandomLewisNielsen, 'r-']}
 	return package
 

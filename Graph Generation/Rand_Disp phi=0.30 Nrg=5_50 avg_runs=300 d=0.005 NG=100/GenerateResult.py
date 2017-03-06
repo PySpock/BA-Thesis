@@ -40,25 +40,23 @@ rfile_vclose = 'CompiledResult NGRID=100.txt'
 
 vckeys, vcvals = getData(rfile_vclose)
 
+title = 'phi=0.3 Nrg=5_50 avg_runs=300 d=0.005 ngrid=100'
 
 # Code, e.g. plotting
 
-#print(fkeys)
-#print(fvals)
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
 ax.set_xlim(4, 51)
-#ax.set_ylim(0.008, 0.065)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
 ax.errorbar(vcvals[5], vcvals[0], yerr=vcvals[1], fmt='ko', label='Simulationswert $\lambda(N) \quad d=0.0005$')
 
+ax.set_title(title)
 
 ax.legend(loc=1)
 
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.pdf')
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
+fig.savefig(title + '.pdf')
 plt.show()
