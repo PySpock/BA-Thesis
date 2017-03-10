@@ -33,13 +33,11 @@ def extract_from_flextbl(filename, separators=['X', 'Y', 'DATA']):
 	lines = [line for line in lines if line != '']
 	# Split data on separators
 	sep_indexes = []
-	data_points = 0
 	for index, line in enumerate(lines):
 		for separator in separators:
 			if line[0:len(separator)] == separator:
 				sep_indexes.append(index)
-				if separator == 'X':
-					data_points = int(line[1:].strip())
+
 
 	x = lines[sep_indexes[0] + 1:sep_indexes[1]]
 	y = lines[sep_indexes[1] + 1:sep_indexes[2]]
@@ -51,6 +49,7 @@ def extract_from_flextbl(filename, separators=['X', 'Y', 'DATA']):
 	data_list = [list(itertools.chain.from_iterable(sublist)) for sublist in data_list]
 	# Convert to float for plotting
 	data_list = [[float(item) for item in sublist] for sublist in data_list]
+	data_points = len(data_list[0])
 
 	z = [[data_list[2][i] for i in range(j*data_points, (j+1)*data_points)] for j in range(0, data_points)]
 	data_list[2] = np.asarray(z)
