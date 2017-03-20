@@ -139,9 +139,9 @@ def updateDescriptor(update_lines, filename, sep=['{Modifikation Beginn}','{Modi
 		file.close()
 
 
-def single_run(descriptorpath, descriptorname, startstage, N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
+def single_run(descriptorpath, descriptorname, N_arr, phi, delta=0.01, xL=1.0, yL=0.1):
 	flexepath = 'C:\\FlexPDE6\\FlexPDE6n.exe'
-	stagenum = startstage
+	stagenum = 0
 	modpars = ['stagenum = ','number = ','xOff = ','yOff = ','volFrac=']
 	update = [0 for param in modpars]
 	max_scratch_retries = 10
@@ -185,6 +185,7 @@ def single_run(descriptorpath, descriptorname, startstage, N_arr, phi, delta=0.0
 		max_timeouts = 10
 		timeouts = 0
 		timeout_time = 25
+		#sto = open(os.devnull, 'wb') maybe redicret stout of flexpde to logfile
 		while True:
 			try:
 				subprocess.call([flexepath, descriptorpath + '\\' + descriptorname], timeout=timeout_time)
@@ -222,14 +223,16 @@ def move_files(startstrings, src, dest):
 	for src, dest in zip(f_src, f_dest):
 		sh.move(src, dest)
 
-def create_folders(avg_runs):
+def create_folders(startindex, endindex):
 	procpath = os.getcwd()
 	datapath = '\\'.join([procpath, 'data'])
+
 	try:
 		os.mkdir(datapath)
 	except FileExistsError:
 		pass
-	for i in range(1, avg_runs + 1):
+
+	for i in range(startindex, endindex + 1):
 		runpath = '\\'.join([datapath, 'run' + str(i)])
 		try:
 			os.mkdir(runpath)
@@ -238,33 +241,29 @@ def create_folders(avg_runs):
 
 
 class SimulationProcess(mp.Process):
-	def __init__(self, descriptorpath, descriptorname, startstage, avg_runs, Narr, phi, delta):
+	def __init__(self, descriptorpath, descriptorname, avg_runs, Narr, phi, delta):
+		mp.Process.__init__(self)
 		self.descriptorpath = descriptorpath
 		self.descriptorname = descriptorname
-		self.startstage = startstage
 		self.Narr = Narr
 		self.avg_runs = avg_runs
 		self.phi = phi
 		self.delta = delta
 
 	def run(self):
-		create_folders(self.avg_runs)
+		os.chdir(self.descriptorpath)
+		try:
+			startindex = self.avg_runs[0]
+			endindex = self.avg_runs[1]
+		except TypeError:
+			startindex = 1
+			endindex = self.avg_runs
+
+		create_folders(startindex, endindex)
 		src = self.descriptorpath
-		for run in range(1, self.avg_runs + 1):
+		for run in range(startindex, endindex + 1):
 			dest = '\\'.join([src, 'data', 'run' + str(run)])
-			single_run(self.descriptorpath, self.descriptorname, self.startstage, self.Narr,
+			single_run(self.descriptorpath, self.descriptorname, self.Narr,
 						self.phi, self.delta)
 			move_files(['Sim_Info_', 'Config_Info_'], src, dest)
 		
-
-path = 'C:\\Users\\Jannik\\Desktop\\Rand Disp\\Rand_Disp WIP'
-name = 'Rand_Disp Sphere.pde'
-
-os.chdir(path)
-print(os.getcwd())
-input()
-
-logging.basicConfig(level=logging.INFO)
-
-s1 = SimulationProcess(path, name, 5, [1,2,3,4,5], 0.05, 0.01)
-s1.run()

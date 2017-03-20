@@ -31,8 +31,3 @@ class DescriptorError(Exception):
 		calling function/module/thread"""
 	pass
 
-class FatalSkipError(Exception):
-	""" Fatal skip error ist used to reraise an exception which occured due to an
-		unhandleable problem causing the algorithm to skip a stage-run in the
-		simulation"""
-	pass

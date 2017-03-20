@@ -87,7 +87,7 @@ def compileResults(resultfile_name, delimiter='-----', splitChar='=', startStrin
 	mf_keys, mf_vals = extractData(resultfiles)
 	writeFile(resultfile_name, mf_keys, mf_vals)
 
-if __name__ == 'main':
+if __name__ == '__main__':
 	print('Stebix Python Script Version 0.1')
 	print(' ')
 	print(' ')

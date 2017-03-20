@@ -44,7 +44,7 @@ def configPlot(plotloc=2, xOffset=False, yOffset=False):
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
-ng_vals = [10, 25, 50, 100, 150]
+ng_vals = [10, 25, 50, 75, 100, 150, 200]
 
 rf_stat = ['stat NG=' + str(ngval) + '.txt' for ngval in ng_vals]
 rf_per = ['per NG=' + str(ngval) + '.txt' for ngval in ng_vals]
