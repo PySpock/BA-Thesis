@@ -33,6 +33,23 @@ def getData(resultfile, delim='-----'):
 	key_data, val_data = separateKeysVals(file_lines, delim)
 	return key_data, val_data
 
+
+def plot_maxwellbased(kInlay=1.00, kMatrix=0.01, inlayVolFrac=0.1):
+	nmin = 0
+	nmax = 100
+	for name, funcpar in am.funcPack_maxwellbased().items():
+		ax.hlines(funcpar[0](kInlay, kMatrix, inlayVolFrac), nmin, nmax, label=name,
+					color=funcpar[1][0], linestyle=funcpar[1][1:])
+
+
+def plot_lewisniels(kInlay=1.00, kMatrix=0.01, inlayVolFrac=0.1):
+	nmin = 0
+	nmax = 100
+	for name, funcpar in am.funcPack_lewisniels().items():
+		ax.hlines(funcpar[0](kInlay, kMatrix, inlayVolFrac), nmin, nmax, label=name,
+					color=funcpar[1][0], linestyle=funcpar[1][1:])
+
+
 # Path data to TXT-file with simulation results
 # Specify (path and) name as "hardcoded variables"
 
@@ -40,25 +57,25 @@ rfile_vclose = 'CompiledResult.txt'
 
 vckeys, vcvals = getData(rfile_vclose)
 
+title = 'phi=0.3 Nrg=5_30 avg_runs=300 d=0.001 ngrid=200'
 
 # Code, e.g. plotting
 
-#print(fkeys)
-#print(fvals)
 
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
 ax.set_xlim(4, 31)
-#ax.set_ylim(0.008, 0.065)
 ax.set_xlabel('Anzahl der Inhomogenitäten N')
 ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
 
-ax.errorbar(vcvals[5], vcvals[0], yerr=vcvals[1], fmt='ko', label='Simulationswert $\lambda(N) \quad d=0.0025$')
+ax.set_title('phi=0.3 Nrg=5_30 avg_runs=300 d=0.001 ngrid=200')
 
+ax.errorbar(vcvals[5], vcvals[0], yerr=vcvals[1], fmt='ko', label='Simulationswert $\lambda(N) \quad d=0.001$')
+plot_lewisniels(inlayVolFrac=0.3)
+plot_maxwellbased(inlayVolFrac=0.3)
 
 ax.legend(loc=1)
 
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.pdf')
-#fig.savefig('Rand_Disp phi=0.05 Nmax=50.png', dpi=800)
+fig.savefig(title + '.pdf')
 plt.show()

@@ -155,4 +155,3 @@ def funcPack_lewisniels():
 				'Cylindrical simple cubic Lewis Nielsen' : [cylCubicLewisNielsen, 'g-'],
 				'Cylindrical random Lewis Nielsen' : [cylRandomLewisNielsen, 'r-']}
 	return package
-	
