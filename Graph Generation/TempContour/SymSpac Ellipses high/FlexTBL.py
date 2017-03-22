@@ -26,7 +26,6 @@ def extract_from_flextbl(filename, separators=['X', 'Y', 'DATA']):
 			if line[0:len(separator)] == separator:
 				sep_indexes.append(index)
 
-
 	x = lines[sep_indexes[0] + 1:sep_indexes[1]]
 	y = lines[sep_indexes[1] + 1:sep_indexes[2]]
 	data = lines[sep_indexes[2] + 1:]
@@ -51,7 +50,7 @@ def extract_from_flextbl(filename, separators=['X', 'Y', 'DATA']):
 def plot_tempfield(data_list):
 	""" Basic plot function to quickly shell out a countourf() plot
 		of the temperature field. For customized plotting resort to
-		manually configured plots"""
+		manually configured plots or configure this function body"""
 	x = data_list[0]
 	y = data_list[1]
 	zc = data_list[2]
