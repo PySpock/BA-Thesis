@@ -85,6 +85,7 @@ def simconfig():
 	return simpars
 
 def merge_runfolders():
+	pass
 	
 
 def distribute_avg_runs(tot_runs, proc_target):
