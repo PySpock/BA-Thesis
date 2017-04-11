@@ -78,11 +78,11 @@ for i, sv, pv, ngval in zip(itr, stat_vals, per_vals, ng_vals):
 
 	ax.set_ylim(12.00, 12.125)
 	ax.set_xlim(-1, 1)
-	ax.set_xlabel('Position der Inhomgenität $x$ in m ')
-	ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{mW (m \cdot K)^{-1}}$')
+	ax.set_xlabel('Position der Inhomgenität $x$ / m ')
+	ax.set_ylabel('Effektive Wärmeleitfähigkeit $\lambda_{\mathrm{eff}}$ in $\mathrm{mW (m \cdot K)^{-1}}$')
 
-	ax.plot(stat_vals[i][2], 1000 * stat_vals[i][0], 'ro', label='$\lambda_{\mathrm{eff}}(x)$ stat. Randbedingung')
-	ax.plot(per_vals[i][2], 1000 * per_vals[i][0], 'gs', label='$\lambda_{\mathrm{eff}}(x)$ period. Randbedingung')
+	ax.plot(stat_vals[i][2], 1000 * stat_vals[i][0], 'bs', label='$\lambda_{\mathrm{eff}}(x)$ stat. Randbedingung')
+	ax.plot(per_vals[i][2], 1000 * per_vals[i][0], 'go', label='$\lambda_{\mathrm{eff}}(x)$ period. Randbedingung')
 
 	configPlot(plotloc=8)
 

@@ -59,8 +59,10 @@ ax = fig.add_subplot(1,1,1)
 
 ax.set_ylim(0.0105, 0.0111)
 ax.set_xlim(-2, 2)
+
 ax.set_xlabel('Abstand Inhomogenitäten $d$ / m ')
 ax.set_ylabel('Effektive Wärmeleitfähigkeit $\lambda_{\mathrm{eff}}$ / $\mathrm{W (m \cdot K)^{-1}}$')
+
 
 ax.plot(svals[3], svals[0], 'r+', label='Stat. Randbedingungen', markersize=8, markeredgewidth=1.25)
 ax.plot(pvals[3], pvals[0], 'gx', label='Period. Randbedingungen', markersize=8, markeredgewidth=1.0)

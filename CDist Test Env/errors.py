@@ -7,8 +7,8 @@ class MeshCollisionError(InlayGenerationError):
 	"""Raised if inlay size plus delta wiggle room exceeds base mesh size"""
 	def __init__(self, rad, yL, delta, msg=None):
 		if msg is None:
-			msg = ' '.join(['Inlay with r=', rad, 'exceeds base mesh dimension',
-						    'yL=', yL, 'plus wiggle room delta=', delta])
+			msg = ' '.join(['Inlay with r=', str(rad), 'exceeds base mesh dimension',
+						    'yL=', str(yL), 'plus wiggle room delta=', str(delta)])
 		self.rad = rad
 		self.yL = yL
 		self.delta = delta
