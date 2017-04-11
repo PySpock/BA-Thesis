@@ -70,6 +70,9 @@ def plot_tempfield(data_list):
 	divider = make_axes_locatable(ax)
 	cax  = divider.append_axes('top', size='10%', pad=0.3)
 
+	# fix wierd antialiasing thingy
+	for c in ctf.collections:
+		c.set_edgecolor('face')
 
 	cbar = plt.colorbar(ctf, cax=cax, orientation='horizontal')
 	cbar.ax.xaxis.set_ticks_position('top')
