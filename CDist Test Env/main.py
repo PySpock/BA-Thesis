@@ -6,12 +6,12 @@ import simulation as sim
 
 
 def get_name(filelist):
-	""" Filters out the felxPDE problem descriptor file in the passed list of filenames
+	""" Filters out the flexPDE problem descriptor file in the passed list of filenames
 		fileslist by looking for the file suffix .pde. All filenames with a .pde-suffix
 		are returned"""
 	descriptorlist = []
 	for file in filelist:
-		if file[-4:] == '.pde':
+		if file.endswith('.pde'):
 			descriptorlist.append(file)
 	return descriptorlist
 
@@ -88,36 +88,23 @@ def merge_runfolders():
 	pass
 	
 
-def distribute_avg_runs(tot_runs, proc_target):
-	runs_per_process = [tot_runs // proc_target for i in range(proc_target)]
-	remainder = tot_runs % proc_target
-	if remainder is 0:
-		run_dist = [[1, runs_per_process[0]]]
-		for i, rpp in enumerate(runs_per_process[1:], start=1):
-			newelem = [run_dist[i-1][0] + rpp, run_dist[i-1][1] + rpp]
-			run_dist.append(newelem)
-		return run_dist
+def distribute_runs(tot_runs, proc_target):
+	runs_per_process = [0 for i in range(proc_target)]
+	remaining_runs = tot_runs
+	proc_ind = 0
 
-	additional_runs = 0
-	remainder_processes = proc_target
-	while remainder % remainder_processes is not 0:
-		remainder_processes -= 1
-		additional_runs = remainder_processes // remainder_processes
+	while remaining_runs > 0:
+		runs_per_process[proc_ind] += 1
+		remaining_runs -= 1
+		proc_ind += 1
+		if proc_ind >= proc_target:
+			proc_ind = 0
 
-	for i in range(remainder_processes):
-		runs_per_process[i] += additional_runs
-
-	run_dist = [[1, runs_per_process[0]]]
-	for i, rpp in enumerate(runs_per_process[1:], start=1):
-		newelem = [run_dist[i-1][1] + 1, run_dist[i-1][1] + rpp]
-		run_dist.append(newelem)
-
-	return run_dist
+	return runs_per_process
 
 
-
-def dispatch_simjobs(simpars, dscname, proc_target=1):
-	run_dist = distribute_avg_runs(simpars[3], proc_target)
+def dispatch_simjobs(simpars, dscname, proc_target=3):
+	run_dist = distribute_runs(simpars[3], proc_target)
 	Narr = np.arange(simpars[0], simpars[1], simpars[2])
 	cdir = os.getcwd()
 	dscsource = '\\'.join([cdir, dscname])
@@ -160,6 +147,5 @@ if __name__ == '__main__':
 	path, name = get_path()
 	simpars = simconfig()
 	dispatch_simjobs(simpars, name)
-
 
 	pass
