@@ -55,7 +55,7 @@ print(sp_vals)
 
 # Data for theoretical models
 
-vF = np.linspace(0.0095, 0.375, 350)
+vF = np.linspace(0.0095, 0.385, 350)
 ki = 1
 km = 0.01
 
@@ -65,14 +65,18 @@ ax = fig.add_subplot(1,1,1)
 
 ax.set_xlim(0.008, 0.385)
 ax.set_ylim(0.008, 0.065)
-ax.set_xlabel('Volumenanteil $\phi$ ')
-ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
+ax.set_xlabel('Volumenanteil $\phi$ / 1')
+ax.set_ylabel('Effektive Wärmeleitfähigkeit $\lambda_{\mathrm{eff}}$ / $\mathrm{W (m \cdot K)^{-1}}$')
 
 
 ax.plot(sp_vals[1], sp_vals[0], 'ro', label='Kreisform')
 ax.plot(cb_vals[1], cb_vals[0], 'gs', label='Quadratform')
 for modelname, modelprops in am.funcPack_maxwellbased().items():
 	ax.plot(vF, modelprops[0](ki, km, vF), modelprops[1], label=modelname)
+
+for modelname, modelprops in am.funcPack_lewisniels().items():
+	if modelname == 'Simple cubic lattice Lewis Nielsen':
+		ax.plot(vF, modelprops[0](ki, km, vF), modelprops[1], label=modelname)
 
 ax.legend(loc=2)
 

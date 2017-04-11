@@ -50,8 +50,8 @@ pkeys, pvals = getData(rf_per)
 
 # Code, e.g. plotting
 
-print(pkeys)
-print(skeys)
+# print(pkeys)
+# print(skeys)
 
 
 fig = plt.figure()
@@ -59,13 +59,28 @@ ax = fig.add_subplot(1,1,1)
 
 ax.set_ylim(0.0105, 0.0111)
 ax.set_xlim(-2, 2)
-ax.set_xlabel('Abstand Inhomgenitäten $d$ in m ')
-ax.set_ylabel('Eff. Wärmeleitfähigkeit $\lambda$ in $\mathrm{W (m \cdot K)^{-1}}$')
+ax.set_xlabel('Abstand Inhomogenitäten $d$ / m ')
+ax.set_ylabel('Effektive Wärmeleitfähigkeit $\lambda_{\mathrm{eff}}$ / $\mathrm{W (m \cdot K)^{-1}}$')
 
 ax.plot(svals[3], svals[0], 'r+', label='Stat. Randbedingungen', markersize=8, markeredgewidth=1.25)
 ax.plot(pvals[3], pvals[0], 'gx', label='Period. Randbedingungen', markersize=8, markeredgewidth=1.0)
 
 ax.legend(loc=8)
+
+ax.annotate('', xy=(-1.7, 0.0108), xytext=(-0.3, 0.0108), arrowprops={'arrowstyle': '|-|'})
+ax.annotate('b)', xy=(-1.0, 0.010825))
+
+ax.annotate('', xy=(1.7, 0.0108), xytext=(0.3, 0.0108), arrowprops={'arrowstyle': '|-|'})
+ax.annotate('b)', xy=(1.0, 0.010825))
+
+ax.annotate('', xy=(-0.3, 0.010635), xytext=(0.3, 0.010635), arrowprops={'arrowstyle': '|-|'})
+ax.annotate('a)', xy=(-0.05, 0.010645))
+
+ax.annotate('', xy=(-2.0, 0.0109), xytext=(-1.7, 0.0109), arrowprops={'arrowstyle': '|-|'})
+ax.annotate('c)', xy=(-1.9, 0.01092))
+
+ax.annotate('', xy=(1.7, 0.0109), xytext=(2.0, 0.0109), arrowprops={'arrowstyle': '|-|'})
+ax.annotate('c)', xy=(1.8, 0.01092))
 
 fig.savefig('N=2 near_coll per_statComp.pdf')
 
